@@ -584,21 +584,50 @@
 
     /* ── Hero mobile ── */
     @media (max-width: 768px) {
-      #hero { min-height: 100dvh; }
-      .hero-left {
-        position: relative; left: auto; bottom: auto; width: 100%;
-        padding: 120px var(--sp-3) var(--sp-4);
-        z-index: 3;
+      /* ── Hero mobile ── */
+      #hero {
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
       }
-      .hero-stats { display: none; }
-      .scroll-explore { display: none; }
+
+      /* Bride fills screen as atmosphere, fades at bottom */
       #hero-bride {
-        left: auto; right: -10%; transform: none;
-        height: 55%;
-        bottom: 0; top: auto;
-        opacity: 0.4;
+        left: 50%;
+        transform: translateX(-50%);
+        height: 80%;
+        opacity: 0.55;
+        bottom: 0;
       }
+
+      /* Strong bottom gradient so text is always readable */
+      .hero-vignette {
+        background:
+          linear-gradient(to bottom, rgba(6,5,4,0.6) 0%, rgba(6,5,4,0) 30%, rgba(6,5,4,0) 45%, rgba(6,5,4,0.97) 80%, rgba(6,5,4,1) 100%);
+      }
+
+      /* Text block sits at bottom, full width, centered */
+      .hero-left {
+        position: relative;
+        left: auto; top: auto; transform: none;
+        width: 100%;
+        padding: 0 var(--sp-3) var(--sp-5);
+        z-index: 3;
+        align-items: center;
+        text-align: center;
+        gap: 12px;
+      }
+
+      #hero-french-kiss,
+      #hero-bridal {
+        font-size: clamp(2.8rem, 11vw, 4rem);
+      }
+
+      .hero-script-block { display: none; }
+      .hero-stats { display: none; }
       .hero-botanical { display: none; }
+      .scroll-explore { display: none; }
     }
 
     /* =============================================
@@ -739,8 +768,9 @@
     }
 
     @media (max-width: 768px) {
-      .features-grid { grid-template-columns: 1fr; }
-      .feature-card { min-height: 240px; }
+      #features { padding: var(--sp-4) var(--sp-3); }
+      .features-grid { grid-template-columns: 1fr; gap: var(--sp-3); }
+      .feature-card { min-height: 280px; }
     }
 
     /* =============================================
@@ -1597,9 +1627,9 @@
       }
 
       .collections-grid {
-        grid-template-columns: 1fr;
-        max-width: 480px;
-        margin: 0 auto;
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 100%;
+        gap: var(--sp-2);
       }
 
       .atelier-steps {
@@ -1609,7 +1639,15 @@
 
       .book-inner {
         grid-template-columns: 1fr;
-        gap: var(--sp-5);
+        gap: var(--sp-4);
+      }
+
+      .book-gform {
+        min-height: 780px;
+      }
+
+      .book-headline {
+        font-size: clamp(1.8rem, 8vw, 2.4rem);
       }
 
       #maison,
