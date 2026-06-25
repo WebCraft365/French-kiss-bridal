@@ -594,11 +594,20 @@
 
       /* Bride fills screen as atmosphere, fades at bottom */
       #hero-bride {
-        left: 50%;
-        transform: translateX(-50%);
-        height: 92%;
-        opacity: 0.65;
+        left: 0;
+        right: 0;
+        transform: none;
+        width: 100%;
+        height: 100%;
+        opacity: 0.7;
         bottom: 0;
+      }
+
+      #hero-bride img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top center;
       }
 
       /* Strong bottom gradient so text is always readable */
