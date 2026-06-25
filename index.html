@@ -691,7 +691,7 @@
        FEATURE TRIPTYCH  (between hero & maison)
     ============================================= */
     #features {
-      background: #111;
+      background: #2A2420;
       padding: var(--sp-6) var(--sp-5);
     }
 
@@ -731,18 +731,19 @@
       transition: transform 0.6s ease;
     }
 
-    .feature-card-img img { width:100%; height:100%; object-fit:cover; object-position:center; opacity:0.45; transition:opacity 0.5s ease; display:block; }
-    .feature-card:hover .feature-card-img img { opacity:0.65; }
+    .feature-card-img img { width:100%; height:100%; object-fit:cover; object-position:center; opacity:0.85; transition:opacity 0.5s ease; display:block; }
+    .feature-card:hover .feature-card-img img { opacity:1; }
 
     .feature-card:hover .feature-card-img {
       transform: scale(1.04);
     }
 
+    /* Only darken the bottom third where text sits */
     .feature-card-gradient {
       position: absolute;
       inset: 0;
       z-index: 1;
-      background: linear-gradient(to top, rgba(10,9,6,0.95) 30%, rgba(10,9,6,0.2) 100%);
+      background: linear-gradient(to top, rgba(6,5,4,0.92) 0%, rgba(6,5,4,0.5) 28%, rgba(6,5,4,0) 55%);
     }
 
     .feature-card-content {
@@ -751,6 +752,7 @@
       display: flex;
       flex-direction: column;
       height: 100%;
+      justify-content: flex-end; /* push all text to bottom */
     }
 
     .feature-card-header {
@@ -829,7 +831,7 @@
        MAISON
     ============================================= */
     #maison {
-      background: var(--color-dark);
+      background: #1E1A17;
       color: var(--color-pearl);
       padding: var(--sp-8) var(--sp-5);
     }
@@ -895,7 +897,7 @@
        COLLECTIONS
     ============================================= */
     #collections {
-      background: var(--color-dark);
+      background: #141210;
       padding: var(--sp-8) var(--sp-5);
     }
 
@@ -1082,7 +1084,7 @@
        ATELIER
     ============================================= */
     #atelier {
-      background: var(--color-dark-alt);
+      background: #231F1B;
       padding: var(--sp-8) var(--sp-5);
     }
 
@@ -1178,7 +1180,7 @@
        TESTIMONIALS
     ============================================= */
     #testimonials {
-      background: var(--color-dark);
+      background: #181512;
       color: var(--color-pearl);
       padding: var(--sp-8) var(--sp-5);
     }
@@ -1252,7 +1254,7 @@
        BOOK AN APPOINTMENT
     ============================================= */
     #book {
-      background: var(--color-dark);
+      background: #1E1A17;
       padding: var(--sp-8) var(--sp-5);
     }
 
@@ -1295,7 +1297,7 @@
        FOOTER
     ============================================= */
     footer {
-      background: var(--color-dark);
+      background: #0A0908;
       border-top: 1px solid rgba(196, 133, 123, 0.12);
       padding: var(--sp-6) var(--sp-5);
       text-align: center;
