@@ -612,8 +612,15 @@
 
       /* Strong bottom gradient so text is always readable */
       .hero-vignette {
-        background:
-          linear-gradient(to bottom, rgba(6,5,4,0.6) 0%, rgba(6,5,4,0) 30%, rgba(6,5,4,0) 45%, rgba(6,5,4,0.97) 80%, rgba(6,5,4,1) 100%);
+        background: linear-gradient(to bottom,
+          rgba(6,5,4,0.55) 0%,
+          rgba(6,5,4,0) 20%,
+          rgba(6,5,4,0) 30%,
+          rgba(6,5,4,0.7) 50%,
+          rgba(6,5,4,0.92) 65%,
+          rgba(6,5,4,1) 78%,
+          rgba(6,5,4,1) 100%
+        );
       }
 
       /* Text block sits at bottom, full width, centered */
@@ -626,11 +633,23 @@
         align-items: center;
         text-align: center;
         gap: 12px;
+        text-shadow: 0 2px 16px rgba(0,0,0,0.8);
       }
 
       #hero-french-kiss,
       #hero-bridal {
         font-size: clamp(2.8rem, 11vw, 4rem);
+      }
+
+      .hero-eyebrow {
+        color: var(--color-pearl);
+        font-size: 0.7rem;
+        letter-spacing: 0.22em;
+      }
+
+      #hero-french-kiss,
+      #hero-bridal {
+        color: var(--color-gold);
       }
 
       .hero-script-block { display: none; }
