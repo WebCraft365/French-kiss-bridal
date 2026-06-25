@@ -1,0 +1,2854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>French Kiss Bridal — Luxury Bridal Wear</title>
+  <meta name="description" content="French Kiss Bridal — Luxury bridal wear. Find your perfect gown with a private fitting experience." />
+
+  <!-- =============================================
+       GOOGLE FONTS
+  ============================================= -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <!-- =============================================
+       GSAP & VANILLA TILT (CDN)
+  ============================================= -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js" defer></script>
+
+  <style>
+    /* =============================================
+       CSS CUSTOM PROPERTIES
+    ============================================= */
+    :root {
+      /* Colours — noir base, brand rose accents */
+      --color-dark:       #1A1A1A;   /* noir black */
+      --color-dark-alt:   #242424;   /* lifted noir */
+      --color-gold:       #C4857B;   /* brand dusty rose accent */
+      --color-pearl:      #FEFEFC;   /* pure white-pearl */
+      --color-ivory:      #FAF7F2;   /* off-white */
+      --color-mist:       #9A9591;   /* grey for body copy */
+      --color-overlay:    rgba(26, 26, 26, 0.85);
+
+      /* Fonts */
+      --font-headline: 'Cormorant Garamond', Georgia, serif;
+      --font-body:     'Raleway', sans-serif;
+
+      /* Spacing scale (8pt) */
+      --sp-1:  8px;
+      --sp-2:  16px;
+      --sp-3:  24px;
+      --sp-4:  32px;
+      --sp-5:  48px;
+      --sp-6:  64px;
+      --sp-7:  96px;
+      --sp-8:  128px;
+
+      /* Z-index scale */
+      --z-base:    0;
+      --z-card:    10;
+      --z-nav:     100;
+      --z-cursor:  1000;
+      --z-intro:   2000;
+    }
+
+    /* =============================================
+       RESET & BASE
+    ============================================= */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      background: var(--color-dark);
+      color: var(--color-pearl);
+      font-family: var(--font-body);
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+      cursor: none; /* hidden — custom cursor takes over */
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      cursor: none;
+      border: none;
+      background: none;
+      font-family: var(--font-body);
+    }
+
+    /* =============================================
+       ACCESSIBILITY — REDUCED MOTION
+    ============================================= */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      html { scroll-behavior: auto; }
+      body { cursor: auto; }
+      #cursor-ring, #cursor-dot { display: none; }
+    }
+
+    /* =============================================
+       CUSTOM CURSOR
+    ============================================= */
+    #cursor-ring {
+      position: fixed;
+      top: 0; left: 0;
+      width: 36px; height: 36px;
+      border: 1.5px solid var(--color-gold);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: var(--z-cursor);
+      transform: translate(-50%, -50%);
+      transition: width 0.25s ease, height 0.25s ease;
+    }
+
+    #cursor-dot {
+      position: fixed;
+      top: 0; left: 0;
+      width: 5px; height: 5px;
+      background: var(--color-gold);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: var(--z-cursor);
+      transform: translate(-50%, -50%);
+    }
+
+    body.cursor-hover #cursor-ring {
+      width: 64px;
+      height: 64px;
+    }
+
+    /* =============================================
+       INTRO SCREEN
+    ============================================= */
+    #intro {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: var(--z-intro);
+    }
+
+    #intro-monogram {
+      font-family: var(--font-headline);
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(6rem, 20vw, 14rem);
+      color: var(--color-gold);
+      letter-spacing: 0.05em;
+      line-height: 1;
+    }
+
+    /* =============================================
+       NAVIGATION
+    ============================================= */
+    #nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: var(--z-nav);
+      background: rgba(26, 26, 26, 0.95);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: var(--sp-2) var(--sp-5);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transform: translateY(-100%);
+      transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    #nav.visible {
+      transform: translateY(0);
+    }
+
+    .nav-logo {
+      font-family: var(--font-headline);
+      font-style: italic;
+      font-weight: 300;
+      font-size: 1.75rem;
+      color: var(--color-gold);
+      letter-spacing: 0.05em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: var(--sp-4);
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--color-pearl);
+      position: relative;
+      padding-bottom: 4px;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 50%;
+      width: 0; height: 1px;
+      background: var(--color-gold);
+      transform: translateX(-50%);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    /* Hamburger */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: none;
+      padding: 4px;
+    }
+
+    .nav-hamburger span {
+      display: block;
+      width: 24px; height: 1px;
+      background: var(--color-gold);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    /* Full-screen mobile menu */
+    #mobile-menu {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: var(--color-dark);
+      z-index: calc(var(--z-nav) - 1);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--sp-4);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    #mobile-menu.open {
+      display: flex;
+      opacity: 1;
+    }
+
+    #mobile-menu a {
+      font-family: var(--font-headline);
+      font-style: italic;
+      font-size: 2.5rem;
+      color: var(--color-pearl);
+      letter-spacing: 0.05em;
+    }
+
+    #mobile-menu a:hover {
+      color: var(--color-gold);
+    }
+
+    /* =============================================
+       HERO — Caramel-inspired 3-column cinematic
+    ============================================= */
+    #hero {
+      position: relative;
+      min-height: 100dvh;
+      overflow: hidden;
+      background: #060504;
+    }
+
+    /* Background photo — crushed very dark */
+    #hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    #hero-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      filter: brightness(0.18) saturate(0.28) sepia(0.35);
+    }
+
+    /* Multi-directional vignette — dark edges, lighter center for the bride */
+    .hero-vignette {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        linear-gradient(to right,  rgba(6,5,4,0.97) 0%,  rgba(6,5,4,0.82) 26%, rgba(6,5,4,0.08) 50%, rgba(6,5,4,0.82) 72%, rgba(6,5,4,0.97) 100%),
+        linear-gradient(to bottom, rgba(6,5,4,0.72) 0%,  rgba(6,5,4,0)    18%, rgba(6,5,4,0)    72%, rgba(6,5,4,0.85) 100%);
+    }
+
+    /* Bride — centered, full height */
+    #hero-bride {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 96%;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    #hero-bride img {
+      height: 100%;
+      width: auto;
+      display: block;
+      object-fit: contain;
+      object-position: bottom center;
+      filter: drop-shadow(0 0 60px rgba(6,5,4,0.5));
+    }
+
+    /* ── Left text column ── */
+    .hero-left {
+      position: absolute;
+      left: 5.5%;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 38%;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--font-body);
+      font-size: 0.58rem;
+      text-transform: uppercase;
+      letter-spacing: 0.26em;
+      color: var(--color-gold);
+      opacity: 0;
+    }
+
+    .hero-line { display: block; overflow: hidden; }
+
+    #hero-french-kiss {
+      font-family: var(--font-headline);
+      font-weight: 600;
+      font-size: clamp(2.4rem, 4vw, 5.2rem);
+      color: var(--color-pearl);
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      line-height: 0.9;
+      display: block;
+    }
+
+    #hero-bridal {
+      font-family: var(--font-headline);
+      font-weight: 600;
+      font-size: clamp(2.4rem, 4vw, 5.2rem);
+      color: var(--color-pearl);
+      letter-spacing: 0.02em;
+      line-height: 0.9;
+      display: block;
+      text-transform: uppercase;
+    }
+
+    .hero-char {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(40px);
+    }
+
+    .hero-subtitle {
+      font-family: var(--font-body);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: rgba(254,254,252,0.45);
+      margin-top: 2px;
+      opacity: 0;
+    }
+
+    .hero-script-block {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+      opacity: 0;
+    }
+
+    .hero-script {
+      font-family: var(--font-headline);
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(1.3rem, 2vw, 1.75rem);
+      color: var(--color-pearl);
+      line-height: 1.2;
+    }
+
+    .hero-script-body {
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      color: rgba(254,254,252,0.5);
+      line-height: 1.75;
+      max-width: 300px;
+    }
+
+    .hero-cta-wrap {
+      opacity: 0;
+      margin-top: 4px;
+    }
+
+    /* Caramel-style primary CTA */
+    .btn-hero {
+      display: inline-block;
+      font-family: var(--font-body);
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      color: var(--color-pearl);
+      border: 1px solid rgba(196,133,123,0.55);
+      padding: 13px 26px;
+      position: relative;
+      overflow: hidden;
+      cursor: none;
+      transition: color 0.4s ease;
+    }
+
+    .btn-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--color-gold);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: -1;
+    }
+    .btn-hero:hover::before { transform: scaleX(1); }
+    .btn-hero:hover { color: var(--color-dark); }
+
+    /* Botanical SVG — bottom-left corner of hero */
+    .hero-botanical {
+      position: absolute;
+      bottom: 3%;
+      left: 2%;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.68;
+    }
+
+    /* ── Right stats column ── */
+    .hero-stats {
+      position: absolute;
+      right: 5.5%;
+      top: 50%;
+      transform: translateY(-42%);
+      z-index: 3;
+      width: 20%;
+    }
+
+    .stats-inner {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Vertical gold line */
+    .stats-inner::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 12px;
+      bottom: 12px;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent 0%, var(--color-gold) 15%, var(--color-gold) 85%, transparent 100%);
+      opacity: 0.5;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      padding: 22px 0;
+      position: relative;
+    }
+
+    /* Circle marker on the line */
+    .stat-marker {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      border: 1px solid var(--color-gold);
+      background: rgba(196,133,123,0.18);
+      flex-shrink: 0;
+      margin-top: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .stat-number {
+      font-family: var(--font-headline);
+      font-weight: 300;
+      font-size: clamp(2.2rem, 3.5vw, 4rem);
+      color: var(--color-gold);
+      line-height: 1;
+      min-width: 52px;
+      flex-shrink: 0;
+    }
+
+    .stat-text { padding-top: 4px; }
+
+    .stat-label {
+      font-family: var(--font-body);
+      font-size: 0.58rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--color-pearl);
+      margin-bottom: 5px;
+    }
+
+    .stat-desc {
+      font-family: var(--font-body);
+      font-style: italic;
+      font-size: 0.7rem;
+      color: var(--color-mist);
+      line-height: 1.5;
+    }
+
+    /* Scroll hint */
+    .scroll-explore {
+      position: absolute;
+      right: var(--sp-4);
+      bottom: var(--sp-4);
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--sp-2);
+      opacity: 0;
+    }
+
+    .scroll-explore-text {
+      font-family: var(--font-body);
+      font-size: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--color-mist);
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+    }
+
+    .scroll-explore-line {
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(to top, var(--color-gold), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    .scroll-hint-line {
+      width: 1px; height: 48px;
+      background: linear-gradient(to bottom, var(--color-gold), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(1); }
+      50%       { opacity: 1;   transform: scaleY(1.15); }
+    }
+
+    /* ── Hero mobile ── */
+    @media (max-width: 768px) {
+      #hero { min-height: 100dvh; }
+      .hero-left {
+        position: relative; left: auto; bottom: auto; width: 100%;
+        padding: 120px var(--sp-3) var(--sp-4);
+        z-index: 3;
+      }
+      .hero-stats { display: none; }
+      .scroll-explore { display: none; }
+      #hero-bride {
+        left: auto; right: -10%; transform: none;
+        height: 55%;
+        bottom: 0; top: auto;
+        opacity: 0.4;
+      }
+      .hero-botanical { display: none; }
+    }
+
+    /* =============================================
+       BUTTONS — shared
+    ============================================= */
+    .btn-liquid {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: var(--font-body); font-weight: 300; font-size: 0.7rem;
+      text-transform: uppercase; letter-spacing: 0.18em; color: var(--color-pearl);
+      padding: 14px 28px; cursor: none;
+      border-radius: 100px; border: 1px solid rgba(196,133,123,0.4);
+      background: rgba(196,133,123,0.08); backdrop-filter: blur(8px);
+      transition: background 0.4s, border-color 0.4s;
+    }
+    .btn-liquid:hover { background: rgba(196,133,123,0.22); border-color: rgba(196,133,123,0.8); }
+
+    .btn-outline {
+      display: inline-block; font-family: var(--font-body); font-weight: 300;
+      font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.2em;
+      color: var(--color-pearl); border: 1px solid rgba(196,133,123,0.45);
+      padding: var(--sp-2) var(--sp-4); position: relative; overflow: hidden;
+      transition: color 0.4s; cursor: none;
+    }
+    .btn-outline::before {
+      content: ''; position: absolute; inset: 0; background: var(--color-gold);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.4s cubic-bezier(0.16,1,0.3,1); z-index: -1;
+    }
+    .btn-outline:hover::before { transform: scaleX(1); }
+    .btn-outline:hover { color: var(--color-dark); }
+
+    /* =============================================
+       FEATURE TRIPTYCH  (between hero & maison)
+    ============================================= */
+    #features {
+      background: #111;
+      padding: var(--sp-6) var(--sp-5);
+    }
+
+    .features-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-2);
+    }
+
+    .feature-card {
+      position: relative;
+      border: 1px solid rgba(196,133,123,0.1);
+      background: rgba(255,255,255,0.02);
+      padding: var(--sp-3);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-2);
+      cursor: none;
+      transition: border-color 0.35s ease, background 0.35s ease;
+      min-height: 380px;
+      overflow: hidden;
+    }
+
+    .feature-card:hover {
+      border-color: rgba(196,133,123,0.3);
+      background: rgba(255,255,255,0.04);
+    }
+
+    /* Feature card background image zone */
+    .feature-card-img {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background: linear-gradient(135deg, #1a160f 0%, #0d0d0d 100%);
+      transition: transform 0.6s ease;
+    }
+
+    .feature-card-img img { width:100%; height:100%; object-fit:cover; object-position:center; opacity:0.45; transition:opacity 0.5s ease; display:block; }
+    .feature-card:hover .feature-card-img img { opacity:0.65; }
+
+    .feature-card:hover .feature-card-img {
+      transform: scale(1.04);
+    }
+
+    .feature-card-gradient {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(to top, rgba(10,9,6,0.95) 30%, rgba(10,9,6,0.2) 100%);
+    }
+
+    .feature-card-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .feature-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .feature-num {
+      font-family: var(--font-body);
+      font-size: 0.65rem;
+      color: var(--color-gold);
+      letter-spacing: 0.1em;
+    }
+
+    .feature-arrow {
+      font-size: 0.75rem;
+      color: rgba(196,133,123,0.5);
+      transition: color 0.3s, transform 0.3s;
+    }
+
+    .feature-card:hover .feature-arrow {
+      color: var(--color-gold);
+      transform: translate(3px, -3px);
+    }
+
+    .feature-title {
+      font-family: var(--font-headline);
+      font-style: italic;
+      font-weight: 300;
+      font-size: 1.6rem;
+      color: var(--color-pearl);
+      line-height: 1.2;
+      margin-top: auto;
+    }
+
+    .feature-desc {
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      color: var(--color-mist);
+      letter-spacing: 0.08em;
+      margin-top: 6px;
+    }
+
+    @media (max-width: 768px) {
+      .features-grid { grid-template-columns: 1fr; }
+      .feature-card { min-height: 240px; }
+    }
+
+    /* =============================================
+       SECTION SHARED
+    ============================================= */
+    .section-eyebrow {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      color: var(--color-gold);
+      margin-bottom: var(--sp-2);
+    }
+
+    .section-headline {
+      font-family: var(--font-headline);
+      font-style: italic;
+      font-weight: 300;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+
+    /* =============================================
+       MAISON
+    ============================================= */
+    #maison {
+      background: var(--color-dark);
+      color: var(--color-pearl);
+      padding: var(--sp-8) var(--sp-5);
+    }
+
+    .maison-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-7);
+      align-items: center;
+    }
+
+    /* IMAGE SLOT: about image left column */
+    .maison-image-wrap {
+      position: relative;
+      height: 600px;
+      border-radius: 2px;
+      overflow: hidden;
+      /* Replace with your about image */
+    }
+
+    .maison-image-placeholder {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(160deg, #1a160f 0%, #0d0d0d 40%, #0d0d0d 100%);
+      display: flex;
+      align-items: flex-end;
+      padding: var(--sp-3);
+      animation: kenBurns 12s ease-in-out infinite alternate;
+    }
+
+    /* <!-- IMAGE SLOT: Replace placeholder div with img when ready -->
+    <img src="images/about.jpg" class="maison-img" alt="French Kiss Bridal atelier interior"> */
+
+    @keyframes kenBurns {
+      from { transform: scale(1) translate(0, 0); }
+      to   { transform: scale(1.08) translate(-2%, -2%); }
+    }
+
+    .maison-image-label {
+      font-family: var(--font-body);
+      font-size: 0.65rem;
+      color: rgba(250, 247, 242, 0.35);
+      letter-spacing: 0.1em;
+    }
+
+    .maison-content .section-headline {
+      font-size: clamp(1.8rem, 3vw, 3rem);
+      line-height: 1.3;
+      margin-bottom: var(--sp-3);
+      color: var(--color-pearl);
+    }
+
+    .maison-body p {
+      font-size: 0.95rem;
+      color: var(--color-mist);
+      line-height: 1.85;
+      margin-bottom: var(--sp-2);
+    }
+
+    /* =============================================
+       COLLECTIONS
+    ============================================= */
+    #collections {
+      background: var(--color-dark);
+      padding: var(--sp-8) var(--sp-5);
+    }
+
+    .collections-header {
+      text-align: center;
+      margin-bottom: var(--sp-7);
+    }
+
+    .collections-header .section-headline {
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      color: var(--color-pearl);
+    }
+
+    .collections-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-4);
+    }
+
+    /* ——— DRESS CARD ——— */
+    .dress-card {
+      background: transparent;
+      position: relative;
+      cursor: none;
+    }
+
+    /* Ambient sway — each card offset by a different delay */
+    .dress-card:nth-child(1) { animation: sway 6s ease-in-out infinite; animation-delay: 0s; }
+    .dress-card:nth-child(2) { animation: sway 6s ease-in-out infinite; animation-delay: -1s; }
+    .dress-card:nth-child(3) { animation: sway 6s ease-in-out infinite; animation-delay: -2s; }
+    .dress-card:nth-child(4) { animation: sway 6s ease-in-out infinite; animation-delay: -3s; }
+    .dress-card:nth-child(5) { animation: sway 6s ease-in-out infinite; animation-delay: -4s; }
+    .dress-card:nth-child(6) { animation: sway 6s ease-in-out infinite; animation-delay: -0.5s; }
+
+    @keyframes sway {
+      0%, 100% { transform: rotate(-1.5deg); }
+      50%       { transform: rotate(1.5deg); }
+    }
+
+    /* Image zone */
+    .dress-image-zone {
+      height: 420px;
+      overflow: visible; /* so PNG dresses float on dark bg */
+      position: relative;
+      border: 1px dashed rgba(196, 133, 123, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Always-visible gradient label at bottom of card */
+    .dress-overlay {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(to top, rgba(10,8,8,0.96) 0%, rgba(10,8,8,0.75) 55%, transparent 100%);
+      padding: var(--sp-3) var(--sp-2) var(--sp-2);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: padding 0.3s ease;
+    }
+
+    .dress-card:hover .dress-overlay {
+      padding-bottom: var(--sp-3);
+    }
+
+    .dress-overlay-name {
+      font-family: var(--font-headline);
+      font-style: italic;
+      font-weight: 300;
+      font-size: 1.25rem;
+      color: var(--color-pearl);
+      line-height: 1.2;
+    }
+
+    .dress-overlay-desc {
+      font-family: var(--font-body);
+      font-size: 0.68rem;
+      color: rgba(250,247,242,0.72);
+      letter-spacing: 0.04em;
+      line-height: 1.5;
+    }
+
+    .dress-overlay-cta {
+      font-family: var(--font-body);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--color-gold);
+      margin-top: 6px;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .dress-card:hover .dress-overlay-cta {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Dress placeholder */
+    .dress-placeholder {
+      font-family: var(--font-body);
+      font-size: 0.6rem;
+      color: rgba(196, 133, 123, 0.3);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-align: center;
+      padding: var(--sp-2);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* <!-- IMAGE SLOT: backgroundless PNG dress — remove placeholder div and uncomment img when ready -->
+    <div class="dress-placeholder">Collection Name</div>
+    <!-- <img src="images/[name].png" class="dress-img" alt="[Collection Name]"> --> */
+
+    /* When real backgroundless PNG dropped in — apply this class */
+    .dress-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      overflow: visible;
+      filter: drop-shadow(0 30px 60px rgba(0,0,0,0.6)) drop-shadow(0 0 40px rgba(196,133,123,0.1));
+    }
+
+    /* For real photos (JPEG/JPG with background) — fills the zone cleanly */
+    .dress-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+    }
+
+    /* Card with a real photo — no dashed border */
+    .dress-card.has-photo .dress-image-zone {
+      border: none;
+      overflow: hidden;
+    }
+
+    /* Price & size metadata */
+    .dress-meta {
+      display: flex;
+      gap: var(--sp-3);
+      margin-top: 6px;
+    }
+
+    .dress-price {
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      color: var(--color-gold);
+      letter-spacing: 0.08em;
+    }
+
+    .dress-size {
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      color: var(--color-mist);
+      letter-spacing: 0.05em;
+    }
+
+    /* Coming Soon card */
+    .dress-card.coming-soon .dress-image-zone {
+      border-style: dashed;
+      border-color: rgba(196, 133, 123, 0.12);
+      background: rgba(196, 133, 123, 0.02);
+    }
+
+    .coming-soon-label {
+      font-family: var(--font-body);
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      color: rgba(196, 133, 123, 0.3);
+    }
+
+    /* info block now replaced by the always-visible overlay */
+    .dress-info { display: none; }
+
+    /* =============================================
+       ATELIER
+    ============================================= */
+    #atelier {
+      background: var(--color-dark-alt);
+      padding: var(--sp-8) var(--sp-5);
+    }
+
+    .atelier-header {
+      text-align: center;
+      margin-bottom: var(--sp-5);
+    }
+
+    .atelier-hero-img {
+      max-width: 680px;
+      margin: 0 auto var(--sp-6);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .atelier-hero-img img {
+      width: 100%;
+      height: 420px;
+      object-fit: cover;
+      object-position: center 30%;
+      display: block;
+      filter: brightness(0.92) saturate(0.9);
+    }
+
+    .atelier-header .section-headline {
+      font-size: clamp(2rem, 4vw, 3rem);
+      color: var(--color-pearl);
+    }
+
+    .atelier-steps {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      position: relative;
+    }
+
+    /* Connecting lines */
+    .atelier-steps::before {
+      content: '';
+      position: absolute;
+      top: 2.5rem;
+      left: calc(12.5% + 2px);
+      right: calc(12.5% + 2px);
+      height: 1px;
+      background: rgba(196, 133, 123, 0.15);
+    }
+
+    .atelier-connector {
+      position: absolute;
+      top: 2.5rem;
+      height: 1px;
+      background: var(--color-gold);
+      width: 0;
+      transition: width 0s;
+    }
+
+    .step-card {
+      text-align: center;
+      padding: 0 var(--sp-3);
+      position: relative;
+    }
+
+    .step-numeral {
+      font-family: var(--font-headline);
+      font-style: italic;
+      font-weight: 300;
+      font-size: 4rem;
+      color: var(--color-gold);
+      line-height: 1;
+      margin-bottom: var(--sp-2);
+    }
+
+    .step-name {
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--color-pearl);
+      margin-bottom: var(--sp-1);
+    }
+
+    .step-desc {
+      font-family: var(--font-body);
+      font-style: italic;
+      font-weight: 300;
+      font-size: 0.85rem;
+      color: var(--color-mist);
+      line-height: 1.65;
+    }
+
+    /* =============================================
+       TESTIMONIALS
+    ============================================= */
+    #testimonials {
+      background: var(--color-dark);
+      color: var(--color-pearl);
+      padding: var(--sp-8) var(--sp-5);
+    }
+
+    .testimonials-inner {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .quote-mark {
+      font-family: var(--font-headline);
+      font-style: italic;
+      font-size: 7rem;
+      color: var(--color-gold);
+      line-height: 0.6;
+      margin-bottom: var(--sp-3);
+      display: block;
+    }
+
+    .testimonial-slide {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+
+    .testimonial-slide.active {
+      display: block;
+      opacity: 1;
+    }
+
+    .testimonial-text {
+      font-family: var(--font-headline);
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+      color: var(--color-pearl);
+      line-height: 1.6;
+      margin-bottom: var(--sp-3);
+    }
+
+    .testimonial-bride {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      color: var(--color-gold);
+    }
+
+    .testimonial-dots {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: var(--sp-4);
+    }
+
+    .t-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(196, 133, 123, 0.3);
+      cursor: none;
+      transition: background 0.3s ease;
+    }
+
+    .t-dot.active {
+      background: var(--color-gold);
+    }
+
+    /* =============================================
+       BOOK AN APPOINTMENT
+    ============================================= */
+    #book {
+      background: var(--color-dark);
+      padding: var(--sp-8) var(--sp-5);
+    }
+
+    .book-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-7);
+      align-items: start;
+    }
+
+    .book-headline {
+      font-family: var(--font-headline);
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      color: var(--color-pearl);
+      line-height: 1.3;
+      margin-bottom: var(--sp-3);
+    }
+
+    .book-body {
+      font-size: 0.9rem;
+      color: var(--color-mist);
+      line-height: 1.8;
+    }
+
+    /* Form */
+    .book-gform {
+      width: 100%;
+      min-height: 620px;
+      border: none;
+      border-radius: 2px;
+      background: transparent;
+      color-scheme: dark;
+    }
+
+    /* =============================================
+       FOOTER
+    ============================================= */
+    footer {
+      background: var(--color-dark);
+      border-top: 1px solid rgba(196, 133, 123, 0.12);
+      padding: var(--sp-6) var(--sp-5);
+      text-align: center;
+    }
+
+    .footer-monogram {
+      font-family: var(--font-headline);
+      font-style: italic;
+      font-weight: 600;
+      font-size: 4rem;
+      color: var(--color-gold);
+      line-height: 1;
+      margin-bottom: var(--sp-2);
+    }
+
+    .footer-tagline {
+      font-family: var(--font-body);
+      font-style: italic;
+      font-size: 0.8rem;
+      color: var(--color-mist);
+      letter-spacing: 0.12em;
+      margin-bottom: var(--sp-3);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: var(--sp-3);
+      justify-content: center;
+      flex-wrap: wrap;
+      list-style: none;
+      margin-bottom: var(--sp-3);
+    }
+
+    .footer-links a {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--color-pearl);
+      transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--color-gold);
+    }
+
+    .footer-copy {
+      font-size: 0.65rem;
+      color: rgba(154, 149, 145, 0.5);
+      letter-spacing: 0.08em;
+    }
+
+    /* =============================================
+       GOWN DETAIL MODAL
+    ============================================= */
+    #gown-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--sp-3);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    #gown-modal.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(10, 10, 10, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      cursor: none;
+    }
+
+    .modal-panel {
+      position: relative;
+      z-index: 1;
+      background: #1e1e1e;
+      border: 1px solid rgba(196, 133, 123, 0.15);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      width: 100%;
+      max-width: 1000px;
+      max-height: 90dvh;
+      overflow-y: auto;
+      transform: translateY(30px) scale(0.97);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    #gown-modal.open .modal-panel {
+      transform: translateY(0) scale(1);
+    }
+
+    /* Scrollbar styling for modal */
+    .modal-panel::-webkit-scrollbar { width: 4px; }
+    .modal-panel::-webkit-scrollbar-track { background: transparent; }
+    .modal-panel::-webkit-scrollbar-thumb { background: rgba(196,133,123,0.3); border-radius: 2px; }
+
+    .modal-close {
+      position: absolute;
+      top: var(--sp-2);
+      right: var(--sp-2);
+      z-index: 10;
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--color-mist);
+      border: 1px solid rgba(196,133,123,0.2);
+      border-radius: 50%;
+      transition: color 0.2s, border-color 0.2s;
+      cursor: none;
+    }
+
+    .modal-close:hover {
+      color: var(--color-gold);
+      border-color: var(--color-gold);
+    }
+
+    /* ── Slider ── */
+    .modal-slider {
+      position: relative;
+      background: #141414;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 520px;
+      overflow: hidden;
+    }
+
+    .slider-track {
+      width: 100%; height: 100%;
+      position: relative;
+      flex: 1;
+    }
+
+    .slider-slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.45s ease;
+      pointer-events: none;
+    }
+
+    .slider-slide.active {
+      opacity: 1;
+      pointer-events: all;
+      position: relative;
+    }
+
+    .modal-dress-img {
+      width: 100%;
+      height: 100%;
+      max-height: 75vh;
+      object-fit: contain;
+      object-position: center;
+      display: block;
+    }
+
+    .slide-label {
+      position: absolute;
+      bottom: var(--sp-2);
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-body);
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--color-gold);
+      background: rgba(20,20,20,0.75);
+      padding: 4px 14px;
+      border: 1px solid rgba(196,133,123,0.25);
+    }
+
+    .slider-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 5;
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--color-gold);
+      border: 1px solid rgba(196,133,123,0.25);
+      background: rgba(20,20,20,0.6);
+      transition: background 0.2s, border-color 0.2s;
+      cursor: none;
+    }
+
+    .slider-arrow:hover {
+      background: rgba(196,133,123,0.15);
+      border-color: var(--color-gold);
+    }
+
+    .slider-prev { left: var(--sp-2); }
+    .slider-next { right: var(--sp-2); }
+
+    .slider-dots {
+      position: absolute;
+      bottom: var(--sp-2);
+      right: var(--sp-2);
+      display: flex;
+      gap: 8px;
+    }
+
+    .slider-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: rgba(196,133,123,0.25);
+      transition: background 0.3s;
+      cursor: none;
+    }
+
+    .slider-dot.active { background: var(--color-gold); }
+
+    /* ── Details panel ── */
+    .modal-details {
+      padding: var(--sp-6) var(--sp-5);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-2);
+      overflow-y: auto;
+    }
+
+    .modal-gown-name {
+      font-family: var(--font-headline);
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+      color: var(--color-pearl);
+      line-height: 1.2;
+    }
+
+    .modal-meta-row {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2);
+      margin-top: 4px;
+    }
+
+    .modal-price {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      color: var(--color-gold);
+      letter-spacing: 0.05em;
+    }
+
+    .modal-size-badge {
+      font-family: var(--font-body);
+      font-size: 0.65rem;
+      color: var(--color-mist);
+      letter-spacing: 0.1em;
+      border: 1px solid rgba(154,149,141,0.25);
+      padding: 3px 10px;
+    }
+
+    .modal-desc {
+      font-family: var(--font-headline);
+      font-style: italic;
+      font-weight: 300;
+      font-size: 1.1rem;
+      color: rgba(254,254,252,0.75);
+      line-height: 1.6;
+    }
+
+    .modal-divider {
+      width: 40px;
+      height: 1px;
+      background: rgba(196,133,123,0.35);
+      margin: var(--sp-1) 0;
+    }
+
+    .modal-editorial-label {
+      font-family: var(--font-body);
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--color-gold);
+    }
+
+    .modal-editorial {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 0.85rem;
+      color: var(--color-mist);
+      line-height: 1.85;
+    }
+
+    .modal-book-btn {
+      margin-top: var(--sp-2);
+      align-self: flex-start;
+    }
+
+    /* Modal responsive */
+    @media (max-width: 768px) {
+      .modal-panel {
+        grid-template-columns: 1fr;
+        max-height: 92dvh;
+      }
+      .modal-slider { min-height: 320px; }
+      .modal-dress-img { height: 320px; }
+      .modal-details { padding: var(--sp-4) var(--sp-3); }
+    }
+
+    /* =============================================
+       RESPONSIVE — TABLET (≤ 1200px)
+    ============================================= */
+    @media (max-width: 1200px) {
+      .collections-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .atelier-steps {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--sp-5);
+      }
+
+      .atelier-steps::before {
+        display: none;
+      }
+    }
+
+    /* =============================================
+       RESPONSIVE — MOBILE (≤ 768px)
+    ============================================= */
+    @media (max-width: 768px) {
+      #nav {
+        padding: var(--sp-2) var(--sp-3);
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .nav-hamburger {
+        display: flex;
+      }
+
+      .maison-inner {
+        grid-template-columns: 1fr;
+        gap: var(--sp-5);
+      }
+
+      .maison-image-wrap {
+        height: 360px;
+      }
+
+      .collections-grid {
+        grid-template-columns: 1fr;
+        max-width: 480px;
+        margin: 0 auto;
+      }
+
+      .atelier-steps {
+        grid-template-columns: 1fr;
+        gap: var(--sp-5);
+      }
+
+      .book-inner {
+        grid-template-columns: 1fr;
+        gap: var(--sp-5);
+      }
+
+      #maison,
+      #collections,
+      #atelier,
+      #testimonials,
+      #book {
+        padding: var(--sp-7) var(--sp-3);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =============================================
+       CUSTOM CURSOR
+  ============================================= -->
+  <div id="cursor-ring" aria-hidden="true"></div>
+  <div id="cursor-dot"  aria-hidden="true"></div>
+
+  <!-- =============================================
+       INTRO SCREEN
+  ============================================= -->
+  <div id="intro" aria-hidden="true">
+    <span id="intro-monogram">FK</span>
+  </div>
+
+  <!-- =============================================
+       NAVIGATION
+  ============================================= -->
+  <nav id="nav" role="navigation" aria-label="Main navigation">
+    <a href="#" class="nav-logo" aria-label="French Kiss Bridal home">FK</a>
+
+    <ul class="nav-links">
+      <li><a href="#maison">About Us</a></li>
+      <li><a href="#collections">Collections</a></li>
+      <li><a href="#atelier">Our Process</a></li>
+      <li><a href="#testimonials">Stories</a></li>
+      <li><a href="#book">Book</a></li>
+    </ul>
+
+    <button class="nav-hamburger" aria-label="Open menu" id="hamburger">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Full-screen mobile menu -->
+  <div id="mobile-menu" role="dialog" aria-modal="true" aria-label="Navigation menu">
+    <a href="#maison"      onclick="closeMobileMenu()">About Us</a>
+    <a href="#collections" onclick="closeMobileMenu()">Collections</a>
+    <a href="#atelier"     onclick="closeMobileMenu()">Our Process</a>
+    <a href="#testimonials" onclick="closeMobileMenu()">Stories</a>
+    <a href="#book"        onclick="closeMobileMenu()">Book</a>
+  </div>
+
+  <!-- =============================================
+       HERO
+  ============================================= -->
+  <section id="hero" aria-label="Hero">
+
+    <!-- Background image — crushed dark -->
+    <div id="hero-bg" aria-hidden="true">
+      <img src="hero-background.png" alt="" />
+    </div>
+
+    <!-- Multi-directional vignette -->
+    <div class="hero-vignette" aria-hidden="true"></div>
+
+    <!-- Bride — centered, slightly right -->
+    <div id="hero-bride" aria-hidden="true">
+      <img src="hero-bride-image.png" alt="" />
+    </div>
+
+    <!-- LEFT column: headline + copy + CTA -->
+    <div class="hero-left">
+
+      <p class="hero-eyebrow" id="hero-eyebrow">Luxury Bridal Wear</p>
+
+      <h1>
+        <div class="hero-line">
+          <span id="hero-french-kiss" aria-label="French Kiss"><!-- JS injects chars --></span>
+        </div>
+        <div class="hero-line">
+          <span id="hero-bridal" aria-label="Bridal"><!-- JS injects chars --></span>
+        </div>
+      </h1>
+
+      <p class="hero-subtitle" id="hero-tagline">Where every love story finds its gown</p>
+
+      <div class="hero-script-block" id="hero-script">
+        <p class="hero-script">Discover your perfect gown&hellip;</p>
+        <p class="hero-script-body">Begin with a private consultation &mdash; champagne, candlelight, and time that belongs only to you.</p>
+      </div>
+
+      <div class="hero-cta-wrap" id="hero-cta">
+        <a href="#book" class="btn-hero">Book a Private Fitting</a>
+      </div>
+
+    </div><!-- /.hero-left -->
+
+    <!-- Gold botanical illustration — anchored to hero bottom-left -->
+    <div class="hero-botanical" aria-hidden="true">
+        <svg width="220" height="260" viewBox="0 0 220 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Main left stem -->
+          <path d="M110 250 C105 215 88 180 68 148 C48 116 22 90 10 55" stroke="#C4857B" stroke-width="1.5" fill="none" opacity="0.8"/>
+          <!-- Main right stem -->
+          <path d="M110 250 C118 212 140 178 160 148 C178 120 190 96 185 60" stroke="#C4857B" stroke-width="1.2" fill="none" opacity="0.7"/>
+          <!-- Left branch 1 -->
+          <path d="M72 148 C52 136 28 130 12 116" stroke="#C4857B" stroke-width="1" fill="none" opacity="0.65"/>
+          <ellipse cx="18" cy="119" rx="15" ry="6" fill="#C4857B" opacity="0.42" transform="rotate(-22 18 119)"/>
+          <ellipse cx="8" cy="124" rx="11" ry="5" fill="#C4857B" opacity="0.35" transform="rotate(-30 8 124)"/>
+          <!-- Left branch 2 -->
+          <path d="M48 108 C32 94 16 88 4 76" stroke="#C4857B" stroke-width="1" fill="none" opacity="0.55"/>
+          <ellipse cx="10" cy="78" rx="13" ry="5" fill="#C4857B" opacity="0.38" transform="rotate(-18 10 78)"/>
+          <!-- Right branch 1 -->
+          <path d="M158 148 C175 134 194 128 206 115" stroke="#C4857B" stroke-width="1" fill="none" opacity="0.6"/>
+          <ellipse cx="200" cy="118" rx="14" ry="6" fill="#C4857B" opacity="0.4" transform="rotate(22 200 118)"/>
+          <!-- Right branch 2 -->
+          <path d="M172 112 C186 98 200 90 212 78" stroke="#C4857B" stroke-width="1" fill="none" opacity="0.5"/>
+          <ellipse cx="208" cy="80" rx="12" ry="5" fill="#C4857B" opacity="0.36" transform="rotate(18 208 80)"/>
+          <!-- Centre leaves mid-stem -->
+          <ellipse cx="82" cy="172" rx="18" ry="7" fill="#C4857B" opacity="0.3" transform="rotate(-42 82 172)"/>
+          <ellipse cx="140" cy="170" rx="17" ry="7" fill="#C4857B" opacity="0.28" transform="rotate(42 140 170)"/>
+          <!-- Berry clusters top left -->
+          <circle cx="14" cy="56" r="5" fill="#C4857B" opacity="0.65"/>
+          <circle cx="6"  cy="46" r="3.5" fill="#C4857B" opacity="0.55"/>
+          <circle cx="22" cy="48" r="3" fill="#C4857B" opacity="0.5"/>
+          <circle cx="10" cy="38" r="2.5" fill="#C4857B" opacity="0.42"/>
+          <!-- Berry clusters top right -->
+          <circle cx="186" cy="62" r="4.5" fill="#C4857B" opacity="0.6"/>
+          <circle cx="192" cy="52" r="3.5" fill="#C4857B" opacity="0.52"/>
+          <circle cx="178" cy="54" r="3"   fill="#C4857B" opacity="0.46"/>
+        </svg>
+      </div>
+
+    </div>
+
+    <!-- RIGHT column: stats -->
+    <div class="hero-stats" aria-label="Boutique at a glance">
+      <div class="stats-inner">
+
+        <div class="stat-item">
+          <div class="stat-marker"></div>
+          <div class="stat-number">30+</div>
+          <div class="stat-text">
+            <p class="stat-label">Gowns</p>
+            <p class="stat-desc">handpicked for every bride</p>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-marker"></div>
+          <div class="stat-number">4+</div>
+          <div class="stat-text">
+            <p class="stat-label">Years</p>
+            <p class="stat-desc">and counting</p>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-marker"></div>
+          <div class="stat-number">100+</div>
+          <div class="stat-text">
+            <p class="stat-label">Brides Dressed</p>
+            <p class="stat-desc">each story told in its gown</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Scroll hint -->
+    <div class="scroll-explore" id="scroll-hint" aria-hidden="true">
+      <span class="scroll-explore-text">Scroll to explore</span>
+      <div class="scroll-explore-line"></div>
+    </div>
+
+  </section>
+
+  <!-- =============================================
+       FEATURE TRIPTYCH
+  ============================================= -->
+  <section id="features" aria-label="Explore">
+    <div class="features-grid">
+
+      <a href="#collections" class="feature-card reveal" aria-label="The Collections">
+        <div class="feature-card-img">
+          <img src="dresses/Maggie Sottero Floral Mermaid Gown/41f5dd57-a80e-4716-96b1-e0fb4d4fe658.jpeg" alt="" />
+        </div>
+        <div class="feature-card-gradient"></div>
+        <div class="feature-card-content">
+          <div class="feature-card-header">
+            <span class="feature-num">01</span>
+            <span class="feature-arrow">↗</span>
+          </div>
+          <div>
+            <h3 class="feature-title">The Collections</h3>
+            <p class="feature-desc">30+ gowns. Every silhouette. One that is yours.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="#atelier" class="feature-card reveal" aria-label="The French Kiss Experience">
+        <div class="feature-card-img">
+          <img src="image-2.jpeg" alt="" />
+        </div>
+        <div class="feature-card-gradient"></div>
+        <div class="feature-card-content">
+          <div class="feature-card-header">
+            <span class="feature-num">02</span>
+            <span class="feature-arrow">↗</span>
+          </div>
+          <div>
+            <h3 class="feature-title">The French Kiss Experience</h3>
+            <p class="feature-desc">From discovery to forever — crafted just for you.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="#book" class="feature-card reveal" aria-label="Private Appointments">
+        <div class="feature-card-img">
+          <img src="image-1.jpg" alt="" />
+        </div>
+        <div class="feature-card-gradient"></div>
+        <div class="feature-card-content">
+          <div class="feature-card-header">
+            <span class="feature-num">03</span>
+            <span class="feature-arrow">↗</span>
+          </div>
+          <div>
+            <h3 class="feature-title">Private Fittings</h3>
+            <p class="feature-desc">More than a fitting. An experience you will remember.</p>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- =============================================
+       MAISON
+  ============================================= -->
+  <section id="maison" aria-labelledby="maison-heading">
+    <div class="maison-inner">
+
+      <!-- IMAGE SLOT: Replace placeholder with real image when ready -->
+      <div class="maison-image-wrap reveal">
+        <div class="maison-image-placeholder">
+          <img src="image-1.jpg" class="maison-img" alt="French Kiss Bridal boutique interior" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;" />
+        </div>
+      </div>
+
+      <div class="maison-content">
+        <p class="section-eyebrow reveal">Our Story</p>
+
+        <h2 class="section-headline reveal" id="maison-heading">
+          "Every bride deserves<br>to feel extraordinary"
+        </h2>
+
+        <div class="maison-body">
+          <p class="reveal">
+            French Kiss Bridal is a luxury bridal boutique built for the modern bride —
+            one who knows what she wants and deserves a space that honours that.
+            We curate gowns that are beautiful, considered, and entirely unforgettable.
+          </p>
+          <p class="reveal">
+            We believe finding your gown should feel like a moment, not a transaction.
+            Every appointment is private, unhurried, and centred entirely around you.
+            No pressure. No rush. Just you, your vision, and the perfect dress.
+          </p>
+          <p class="reveal">
+            From sleek minimalism to intricate lace, our collection spans every style
+            of bride. Whatever your day looks like, we have a gown that moves with you.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =============================================
+       COLLECTIONS
+  ============================================= -->
+  <section id="collections" aria-labelledby="collections-heading">
+
+    <div class="collections-header">
+      <p class="section-eyebrow reveal">The Collections</p>
+      <h2 class="section-headline reveal" id="collections-heading">
+        "Dressed for your chapter"
+      </h2>
+    </div>
+
+    <div class="collections-grid">
+
+      <!-- CARD 1 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="Maggie Sottero Floral Mermaid Gown" data-price="$3,500" data-size="UK 10 · US 8 · EU 38"
+        data-desc="Floral mermaid in intricate lace — made for the bride who blooms on her day."
+        data-editorial="Botanical lace climbing the bodice, hugging every curve before cascading into a breath-stealing train. This gown moves with you, breathes with you, tells your story without a single word."
+        data-img-front="dresses/Maggie Sottero Floral Mermaid Gown/41f5dd57-a80e-4716-96b1-e0fb4d4fe658.jpeg"
+        data-img-back="dresses/Maggie Sottero Floral Mermaid Gown/49e44e3b-f8a4-479c-a362-e7070fad5ea1.jpeg">
+        <div class="dress-image-zone"><img src="dresses/Maggie Sottero Floral Mermaid Gown/41f5dd57-a80e-4716-96b1-e0fb4d4fe658.jpeg" class="dress-photo" alt="La Belle Époque" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">La Belle Époque</h3><p class="dress-desc">Floral mermaid in intricate lace — made for the bride who blooms.</p><div class="dress-meta"><span class="dress-price">$3,500</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 2 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="Plain Wedding Dress With Drop Sleeves" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="Pure, clean silhouette with drop sleeves — effortless and timeless."
+        data-editorial="Some brides know that the most powerful statement is restraint. Clean lines, drop sleeves that fall like a whisper, ivory fabric with the quality of a first snow. The bride who chooses this gown needs nothing more."
+        data-img-front="dresses/Plain Wedding Dress With Drop Sleeves/Front.jpg"
+        data-img-back="dresses/Plain Wedding Dress With Drop Sleeves/Back.jpg">
+        <div class="dress-image-zone"><img src="dresses/Plain Wedding Dress With Drop Sleeves/Front.jpg" class="dress-photo" alt="Voile d'Ivoire" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Voile d'Ivoire</h3><p class="dress-desc">Pure clean silhouette with drop sleeves — effortless and timeless.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 3 — $3,000, size 10, drop sleeves -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="Lace Floral Sparkling Mermaid Gown with Drop Sleeves" data-price="$3,000" data-size="UK 10 · US 8 · EU 38"
+        data-desc="Lace floral sparkling mermaid with graceful drop sleeves."
+        data-editorial="There is something impossibly romantic about sleeves that fall — the way they soften a silhouette, lengthen the arms, move like a whisper when you turn. Covered in sparkling floral detail that catches every candlelight and every adoring glance. For the bride who is both ethereal and unforgettable."
+        data-img-front="dresses/Lace Floral Sparkling Mermaid Gown with Drop Sleeves/2fee1bb5-1c3a-478e-84af-6d0c79cc5998.jpeg"
+        data-img-back="dresses/Lace Floral Sparkling Mermaid Gown with Drop Sleeves/64c60f44-c101-41f4-9ad7-d2807dd8962c.jpeg">
+        <div class="dress-image-zone"><img src="dresses/Lace Floral Sparkling Mermaid Gown with Drop Sleeves/2fee1bb5-1c3a-478e-84af-6d0c79cc5998.jpeg" class="dress-photo" alt="Lumière en Dentelle" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Lumière en Dentelle</h3><p class="dress-desc">Lace floral sparkling mermaid with graceful drop sleeves.</p><div class="dress-meta"><span class="dress-price">$3,000</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 4 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="Maggie Sottero Sleeved V-Neck Lace Open Back Sequin Gown with Tail" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="Sleeved V-neck lace with open back, sequin tail — designed for drama."
+        data-editorial="A V-neck that commands attention, sleeves that keep you covered in the most elegant way, and an open back that reveals itself slowly to anyone lucky enough to follow you out of the room. The sequin tail catches every light. This gown performs."
+        data-img-front="dresses/Maggie Sottero Sleeved V-Neck Lace Open Back Sequin Gown with Tail/Front.jpg"
+        data-img-back="dresses/Maggie Sottero Sleeved V-Neck Lace Open Back Sequin Gown with Tail/Back.jpg">
+        <div class="dress-image-zone"><img src="dresses/Maggie Sottero Sleeved V-Neck Lace Open Back Sequin Gown with Tail/Front.jpg" class="dress-photo" alt="Étoile du Soir" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Étoile du Soir</h3><p class="dress-desc">Sleeved V-neck with open back and sequin tail — designed for drama.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 5 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="Maggie Sottero Quarter Sleeve Beaded Button Ivory Gown" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="Quarter-sleeve beaded ivory gown with button back — quiet luxury."
+        data-editorial="Quarter sleeves that give just enough coverage. Beading that catches light with every movement. Button-back detail that rewards patience with beauty. This is the gown for the bride who appreciates the art of understatement — and watches everyone else realise it too."
+        data-img-front="dresses/Maggie Sottero Quarter Sleeve Beaded Button Ivory Gown/Front.jpg"
+        data-img-back="dresses/Maggie Sottero Quarter Sleeve Beaded Button Ivory Gown/Back.jpg">
+        <div class="dress-image-zone"><img src="dresses/Maggie Sottero Quarter Sleeve Beaded Button Ivory Gown/Front.jpg" class="dress-photo" alt="Perle d'Ivoire" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Perle d'Ivoire</h3><p class="dress-desc">Quarter-sleeve beaded ivory with button back — quiet luxury.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 6 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="Maggie Sottero Floral Strap Gown" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="Floral strap gown — delicate straps over a cascade of lace blooms."
+        data-editorial="Delicate floral straps over a bodice in full bloom — this gown is romance made visible. For the bride who wants to feel both covered and completely free, the structured lace gives you everything you need while the straps keep it effortlessly feminine."
+        data-img-front="dresses/Maggie Sottero Floral Strap Gown/Front.jpg"
+        data-img-back="dresses/Maggie Sottero Floral Strap Gown/Back.jpg">
+        <div class="dress-image-zone"><img src="dresses/Maggie Sottero Floral Strap Gown/Front.jpg" class="dress-photo" alt="Bretelles Fleuries" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Bretelles Fleuries</h3><p class="dress-desc">Floral strap gown — delicate straps over a cascade of lace blooms.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 7 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="Maggie Sottero Long Sleeve Floral Lace Gown" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="Long sleeve floral lace — romantic coverage with maximum elegance."
+        data-editorial="Long sleeves are the mark of a bride who has thought about every detail. Lace from wrist to train, the floral pattern unfolds across the entire gown like a garden in spring. Formal without being stiff, romantic without being fussy. A gown that photographs beautifully from every angle."
+        data-img-front="dresses/Maggie Sottero Long Sleeve Floral Lace Gown/Front.jpg"
+        data-img-back="dresses/Maggie Sottero Long Sleeve Floral Lace Gown/Back.jpg">
+        <div class="dress-image-zone"><img src="dresses/Maggie Sottero Long Sleeve Floral Lace Gown/Front.jpg" class="dress-photo" alt="Dentelle Longue" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Dentelle Longue</h3><p class="dress-desc">Long sleeve floral lace — romantic coverage with maximum elegance.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 8 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="Maggie Sottero Plain White Gown with Floral Neckline and Button Back Tail" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="Plain white gown with floral neckline and button-back tail."
+        data-editorial="The neckline says everything — intricate florals framing the décolletage before the gown surrenders to pure white simplicity. The button-back tail is a masterclass in restraint: a detail that reveals itself at the altar, when it matters most."
+        data-img-front="dresses/Maggie Sottero Plain White Gown with Floral Neckline and Button Back Tail/Front.jpg"
+        data-img-back="dresses/Maggie Sottero Plain White Gown with Floral Neckline and Button Back Tail/Back.jpg">
+        <div class="dress-image-zone"><img src="dresses/Maggie Sottero Plain White Gown with Floral Neckline and Button Back Tail/Front.jpg" class="dress-photo" alt="Pureté Florale" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Pureté Florale</h3><p class="dress-desc">Plain white with floral neckline and button-back tail.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 9 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="Maggie Sottero Satin Mermaid Drop Sleeve Gown with Button Back Train" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="Satin mermaid with drop sleeves and button-back train — pure sophistication."
+        data-editorial="Satin has a particular authority — it reflects light differently, moves with a different weight, photographs with a different depth. The mermaid silhouette is uncompromising, the drop sleeves add softness, and the button-back train is the punctuation at the end of a very beautiful sentence."
+        data-img-front="dresses/Maggie Sottero Satin Mermaid Drop Sleeve Gown with Button Back Train/Front.jpg"
+        data-img-back="dresses/Maggie Sottero Satin Mermaid Drop Sleeve Gown with Button Back Train/Back.jpg">
+        <div class="dress-image-zone"><img src="dresses/Maggie Sottero Satin Mermaid Drop Sleeve Gown with Button Back Train/Front.jpg" class="dress-photo" alt="Sirène Satinée" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Sirène Satinée</h3><p class="dress-desc">Satin mermaid with drop sleeves and button-back train.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 10 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="Maggie Sottero Floral Lace Strap V-Neck Gown with Button Back" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="Floral lace V-neck strap gown with button back — structured yet sensual."
+        data-editorial="The V-neck draws the eye. The floral lace commands it to stay. Fine straps over a bodice of climbing botanicals, the button-back closing like a secret being sealed. This gown is for the bride who knows exactly the impression she wants to make — and makes it."
+        data-img-front="dresses/Maggie Sottero Floral Lace Strap V-Neck Gown with Button Back/Front.jpg"
+        data-img-back="dresses/Maggie Sottero Floral Lace Strap V-Neck Gown with Button Back/Back.jpeg">
+        <div class="dress-image-zone"><img src="dresses/Maggie Sottero Floral Lace Strap V-Neck Gown with Button Back/Front.jpg" class="dress-photo" alt="Décolleté en V" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Décolleté en V</h3><p class="dress-desc">Floral lace V-neck strap gown with button back.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 11 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="Rebecca Ingram Off-Shoulder Ball Gown with Button Back and Long Train" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="Off-shoulder ball gown with button back and long train — made for the grand entrance."
+        data-editorial="Some brides walk into a room. This bride arrives. The off-shoulder neckline is architectural perfection; the ball gown skirt billows with quiet authority; the long train follows like a declaration. Reserved for the bride who was always meant to have the kind of wedding people talk about for years."
+        data-img-front="dresses/Rebecca Ingram Off-Shoulder Ball Gown with Button Back and Long Train/Front.jpg"
+        data-img-back="dresses/Rebecca Ingram Off-Shoulder Ball Gown with Button Back and Long Train/Back.jpg">
+        <div class="dress-image-zone"><img src="dresses/Rebecca Ingram Off-Shoulder Ball Gown with Button Back and Long Train/Front.jpg" class="dress-photo" alt="Grande Robe de Bal" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Grande Robe de Bal</h3><p class="dress-desc">Off-shoulder ball gown with long train — the grand entrance.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 12 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="Rebecca Ingram Floral Drop Sleeve Corset Gown with Tail" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="Floral drop-sleeve corset gown with tail — romantic structure at its finest."
+        data-editorial="A corset that shapes you into a work of art. Drop sleeves that soften the drama. Floral lace that blooms across every surface. The tail that follows you down the aisle like a promise. This gown is for the bride who believes her wedding day should feel like the best chapter of the most beautiful story ever written."
+        data-img-front="dresses/Rebecca Ingram Floral Drop Sleeve Corset Gown with Tail/Front.jpg"
+        data-img-back="dresses/Rebecca Ingram Floral Drop Sleeve Corset Gown with Tail/Back.jpg">
+        <div class="dress-image-zone"><img src="dresses/Rebecca Ingram Floral Drop Sleeve Corset Gown with Tail/Front.jpg" class="dress-photo" alt="Corset de Rêve" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Corset de Rêve</h3><p class="dress-desc">Floral drop-sleeve corset with tail — romantic structure.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 13 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="Rebecca Ingram Ivory Floral Lace Mermaid Gown with Straps and Tail" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="Ivory floral lace mermaid with straps and tail — classic and luminous."
+        data-editorial="Ivory has a warmth that pure white can never quite achieve. This floral lace mermaid in ivory carries that warmth through every petal of lace, every delicate strap, every inch of the tail that sweeps behind you. Classic, luminous, timeless — this is the gown that future generations will wish they had worn."
+        data-img-front="dresses/Rebecca Ingram Ivory Floral Lace Mermaid Gown with Straps and Tail/Front.jpeg"
+        data-img-back="dresses/Rebecca Ingram Ivory Floral Lace Mermaid Gown with Straps and Tail/Back.jpg">
+        <div class="dress-image-zone"><img src="dresses/Rebecca Ingram Ivory Floral Lace Mermaid Gown with Straps and Tail/Front.jpeg" class="dress-photo" alt="Sirène Ivoire" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Sirène Ivoire</h3><p class="dress-desc">Ivory floral lace mermaid with straps and tail.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 14 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="Rebecca Ingram Silk Floral Beaded Gown with Beaded Straps" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="Silk floral beaded gown with beaded straps — refined luxury in every thread."
+        data-editorial="Silk carries beading differently than any other fabric — with a fluidity, a give, a whisper. The beaded straps are architectural decisions: thin lines of craftsmanship that carry the weight of the entire bodice. For the bride who understands that true luxury is felt, not just seen."
+        data-img-front="dresses/Rebecca Ingram Silk Floral Beaded Gown with Beaded Straps/Front.jpg"
+        data-img-back="dresses/Rebecca Ingram Silk Floral Beaded Gown with Beaded Straps/Back.jpg">
+        <div class="dress-image-zone"><img src="dresses/Rebecca Ingram Silk Floral Beaded Gown with Beaded Straps/Front.jpg" class="dress-photo" alt="Soie Brodée" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Soie Brodée</h3><p class="dress-desc">Silk floral beaded gown with beaded straps.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 15 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="Rebecca Ingram Upper Body Beaded Gown" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="Upper-body beaded gown — concentrated artistry where it matters most."
+        data-editorial="When the beading lives only in the upper body, the eye is drawn exactly where it should be — to your face, your collarbones, your smile. The gown beneath follows in clean white simplicity, making this the most quietly confident choice in the entire collection."
+        data-img-front="dresses/Rebecca Ingram Upper Body Beaded Gown/Front.jpg"
+        data-img-back="dresses/Rebecca Ingram Upper Body Beaded Gown/Back.jpeg">
+        <div class="dress-image-zone"><img src="dresses/Rebecca Ingram Upper Body Beaded Gown/Front.jpg" class="dress-photo" alt="Haut Cristallisé" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Haut Cristallisé</h3><p class="dress-desc">Upper-body beaded gown — artistry where it matters most.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 16 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="Rebecca Ingram Beaded Strap Floral Lace Gown with Train and Zip" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="Beaded strap floral lace gown with train and zip — effortlessly beautiful."
+        data-editorial="Beaded straps that feel like jewellery you never have to remove. A floral lace body that is both intricate and completely wearable. A train that extends the silhouette into something worth photographing from every direction. The zip back is invisible — which means all you see is the gown."
+        data-img-front="dresses/Rebecca Ingram Beaded Strap Floral Lace Gown with Train and Zip/Front.jpg"
+        data-img-back="dresses/Rebecca Ingram Beaded Strap Floral Lace Gown with Train and Zip/Back.jpg">
+        <div class="dress-image-zone"><img src="dresses/Rebecca Ingram Beaded Strap Floral Lace Gown with Train and Zip/Front.jpg" class="dress-photo" alt="Bretelles Perlées" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Bretelles Perlées</h3><p class="dress-desc">Beaded strap floral lace with train — effortlessly beautiful.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 17 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="Rebecca Ingram Strapless Floral Lace Beaded Gown with Button Back and Train" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="Strapless floral lace beaded gown with button back and train."
+        data-editorial="Strapless is a commitment — to the neckline, to the bodice, to the confidence of a woman who knows her own beauty. Floral lace beading that ascends the entire gown, a button-back that is its own artwork, a train that finishes the statement. Completely, memorably, magnificently strapless."
+        data-img-front="dresses/Rebecca Ingram Strapless Floral Lace Beaded Gown with Button Back and Train/Front.jpg"
+        data-img-back="dresses/Rebecca Ingram Strapless Floral Lace Beaded Gown with Button Back and Train/Back.jpeg">
+        <div class="dress-image-zone"><img src="dresses/Rebecca Ingram Strapless Floral Lace Beaded Gown with Button Back and Train/Front.jpg" class="dress-photo" alt="Sans Bretelles" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Sans Bretelles</h3><p class="dress-desc">Strapless floral lace beaded with button back and train.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 18 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="Atianas Three-Quarter Sleeve Beaded Lace Gown with Beaded Belt" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="Three-quarter sleeve beaded lace gown with beaded belt — poised and polished."
+        data-editorial="Three-quarter sleeves are the most considered choice in bridal fashion — enough coverage to feel elegant, enough skin to feel feminine. The beaded lace works in dialogue with the beaded belt, drawing the eye to the waist, creating a silhouette that is both architectural and deeply romantic."
+        data-img-front="dresses/Atianas Three-Quarter Sleeve Beaded Lace Gown with Beaded Belt/Front.jpg"
+        data-img-back="dresses/Atianas Three-Quarter Sleeve Beaded Lace Gown with Beaded Belt/back.jpg">
+        <div class="dress-image-zone"><img src="dresses/Atianas Three-Quarter Sleeve Beaded Lace Gown with Beaded Belt/Front.jpg" class="dress-photo" alt="Manches Précieuses" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Manches Précieuses</h3><p class="dress-desc">Three-quarter sleeve beaded lace with beaded belt.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 19 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="JH Collection Off-Shoulder Long Sleeve Floral Lace Mermaid Gown" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="Off-shoulder long sleeve floral lace mermaid — the ultimate in elegant contradiction."
+        data-editorial="Off-shoulder with long sleeves — it sounds like a contradiction. It looks like genius. The shoulders are bare and glowing; the arms are covered in cascading floral lace. The mermaid silhouette beneath is unwavering. This gown is proof that the most beautiful things in the world don't follow rules."
+        data-img-front="dresses/JH Collection Off-Shoulder Long Sleeve Floral Lace Mermaid Gown/Front.jpg"
+        data-img-back="dresses/JH Collection Off-Shoulder Long Sleeve Floral Lace Mermaid Gown/Back.jpg">
+        <div class="dress-image-zone"><img src="dresses/JH Collection Off-Shoulder Long Sleeve Floral Lace Mermaid Gown/Front.jpg" class="dress-photo" alt="Épaules Nues" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Épaules Nues</h3><p class="dress-desc">Off-shoulder long sleeve floral lace mermaid.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 20 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="JJ's House White Sleeveless Zip-Back Gown" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="Sleeveless zip-back gown in white — the power of perfect simplicity."
+        data-editorial="Not every bride wants lace. Some brides want structure, clean lines, white fabric that speaks for itself without embellishment. This sleeveless silhouette is a meditation on confidence — a gown that says everything by saying almost nothing. For the bride who knows that simplicity is the ultimate sophistication."
+        data-img-front="dresses/JJ's House White Sleeveless Zip-Back Gown/Front.jpg"
+        data-img-back="dresses/JJ's House White Sleeveless Zip-Back Gown/Back.jpg">
+        <div class="dress-image-zone"><img src="dresses/JJ's House White Sleeveless Zip-Back Gown/Front.jpg" class="dress-photo" alt="Classique Épuré" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Classique Épuré</h3><p class="dress-desc">Sleeveless zip-back gown — the power of perfect simplicity.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 21 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="Mac Duggal One-Arm Floral Lace Beaded Gown" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="One-arm floral lace beaded gown — asymmetric beauty at its most refined."
+        data-editorial="One shoulder. That is all it takes. The asymmetry draws the eye, the floral lace beading fills every surface with artistry, and the silhouette becomes something entirely its own. This is the gown for the bride who moves differently — who has always been the one people cannot stop looking at."
+        data-img-front="dresses/Mac Duggal One-Arm Floral Lace Beaded Gown/Front.jpg"
+        data-img-back="dresses/Mac Duggal One-Arm Floral Lace Beaded Gown/Back.jpg">
+        <div class="dress-image-zone"><img src="dresses/Mac Duggal One-Arm Floral Lace Beaded Gown/Front.jpg" class="dress-photo" alt="Une Épaule" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Une Épaule</h3><p class="dress-desc">One-arm floral lace beaded — asymmetric beauty at its finest.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 22 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="Madison James V-Neck Off-Shoulder Floral Lace Gown with Gold Rhinestones" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="V-neck off-shoulder floral lace with gold rhinestones — glamour in its purest form."
+        data-editorial="Gold rhinestones scatter across floral lace like morning light through a cathedral window. The V-neck and off-shoulder neckline frame the face and collarbones with quiet authority. This gown does not whisper — it speaks clearly, warmly, magnificently. For the bride who was always meant to shine."
+        data-img-front="dresses/Madison James V-Neck Off-Shoulder Floral Lace Gown with Gold Rhinestones/Front.jpg"
+        data-img-back="dresses/Madison James V-Neck Off-Shoulder Floral Lace Gown with Gold Rhinestones/Back.jpg">
+        <div class="dress-image-zone"><img src="dresses/Madison James V-Neck Off-Shoulder Floral Lace Gown with Gold Rhinestones/Front.jpg" class="dress-photo" alt="Or et Dentelle" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Or et Dentelle</h3><p class="dress-desc">V-neck off-shoulder floral lace with gold rhinestones.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 23 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="White Sequin Long Sleeve Gown with Straps" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="White sequin long sleeve gown with straps — luminous and unforgettable."
+        data-editorial="Sequins from collar to hem, long sleeves that shimmer with every movement, straps that keep everything perfectly in place. This gown generates its own light. Walk into any room wearing this and the room becomes yours. For the bride whose wedding night is a celebration, not a ceremony."
+        data-img-front="dresses/White Sequin Long Sleeve Gown with Straps/Front.jpeg"
+        data-img-back="dresses/White Sequin Long Sleeve Gown with Straps/Back.jpg">
+        <div class="dress-image-zone"><img src="dresses/White Sequin Long Sleeve Gown with Straps/Front.jpeg" class="dress-photo" alt="Sequins d'Argent" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Sequins d'Argent</h3><p class="dress-desc">White sequin long sleeve with straps — luminous and unforgettable.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 24 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="White Sleeveless Mermaid Corset Gown" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="Sleeveless mermaid corset gown — clean, powerful, sculpted to perfection."
+        data-editorial="The corset is architecture. The mermaid skirt is sculpture. Together they create something that is less a gown and more a work of art worn by a woman who understands her own power. Sleeveless for maximum impact. Every line is intentional. Every curve is celebrated."
+        data-img-front="dresses/White Sleeveless Mermaid Corset Gown/Front.jpg"
+        data-img-back="dresses/White Sleeveless Mermaid Corset Gown/Back.jpg">
+        <div class="dress-image-zone"><img src="dresses/White Sleeveless Mermaid Corset Gown/Front.jpg" class="dress-photo" alt="Corset Sirène" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Corset Sirène</h3><p class="dress-desc">Sleeveless mermaid corset — clean, powerful, sculpted.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 25 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="Plain White Off-Shoulder Gown with Zip Back" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="Plain white off-shoulder gown with zip back — effortless modern elegance."
+        data-editorial="Off the shoulder, plain white, clean zip back. Three decisions, all correct. This gown trusts the bride completely — there is nothing here to hide behind, and nothing that needs hiding. The simplicity is the statement. For the bride who has always been exactly enough."
+        data-img-front="dresses/Plain White Off-Shoulder Gown with Zip Back/Front.jpg"
+        data-img-back="dresses/Plain White Off-Shoulder Gown with Zip Back/Back.jpg">
+        <div class="dress-image-zone"><img src="dresses/Plain White Off-Shoulder Gown with Zip Back/Front.jpg" class="dress-photo" alt="Épaules Libres" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Épaules Libres</h3><p class="dress-desc">Off-shoulder plain white with zip back — effortless elegance.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 26 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="Off-Shoulder Floral Lace Rhinestone Gown with Drawstring Back" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="Off-shoulder floral lace rhinestone gown with drawstring back."
+        data-editorial="Rhinestones scattered across floral lace like stars emerging one by one at dusk. The off-shoulder cut frames the collarbone with precision. The drawstring back is both practical and poetic — a gown that adjusts to you, because you were never meant to adjust to it."
+        data-img-front="dresses/Off-Shoulder Floral Lace Rhinestone Gown with Drawstring Back/Front.jpg"
+        data-img-back="dresses/Off-Shoulder Floral Lace Rhinestone Gown with Drawstring Back/Back.jpg">
+        <div class="dress-image-zone"><img src="dresses/Off-Shoulder Floral Lace Rhinestone Gown with Drawstring Back/Front.jpg" class="dress-photo" alt="Strass Fleuri" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Strass Fleuri</h3><p class="dress-desc">Off-shoulder floral lace rhinestone with drawstring back.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 27 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="Off-Shoulder High-Low Sparkling Gown with Beaded Sequin Peplum Waist" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="Off-shoulder high-low sparkling gown with beaded sequin peplum waist."
+        data-editorial="The peplum waist is the detail that changes everything — it creates curves, it frames the hips, it adds a layer of drama that is entirely its own. Paired with off-shoulder neckline, sparkling sequins throughout, and the high-low hemline that lets you move freely. This gown is joyful. This gown is alive."
+        data-img-front="dresses/Off-Shoulder High-Low Sparkling Gown with Beaded Sequin Peplum Waist/Front.jpg"
+        data-img-back="dresses/Off-Shoulder High-Low Sparkling Gown with Beaded Sequin Peplum Waist/Back.jpg">
+        <div class="dress-image-zone"><img src="dresses/Off-Shoulder High-Low Sparkling Gown with Beaded Sequin Peplum Waist/Front.jpg" class="dress-photo" alt="Peplum Scintillant" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Peplum Scintillant</h3><p class="dress-desc">Off-shoulder high-low sparkling with beaded sequin peplum.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 28 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="Beaded Off-Shoulder Lace High-Low Gown with Drawstring Back and Tail" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="Beaded off-shoulder lace high-low gown with drawstring back and tail."
+        data-editorial="The high-low hemline is a conversation between freedom and formality — the front is playful, the tail is regal. Beaded off-shoulder lace throughout, a drawstring back that ensures perfect fit. This gown belongs to the bride who has always believed in having it both ways."
+        data-img-front="dresses/Beaded Off-Shoulder Lace High-Low Gown with Drawstring Back and Tail/Front.jpg"
+        data-img-back="dresses/Beaded Off-Shoulder Lace High-Low Gown with Drawstring Back and Tail/Back.jpg">
+        <div class="dress-image-zone"><img src="dresses/Beaded Off-Shoulder Lace High-Low Gown with Drawstring Back and Tail/Front.jpg" class="dress-photo" alt="Asymétrie Dorée" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Asymétrie Dorée</h3><p class="dress-desc">Beaded off-shoulder lace high-low with drawstring and tail.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 29 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="Off-Shoulder Floral Lace Flared Ball Gown with Sequins, Beading, Drawstring Back and Long Train" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="Off-shoulder ball gown with sequins, beading, drawstring back and long train."
+        data-editorial="The long train announces your arrival before you do. Sequins and beading covering every surface, the off-shoulder neckline wide and commanding, the ball gown skirt at its most magnificent. This is not just a gown — it is the full expression of what a wedding can be. For the bride who has waited her whole life to feel like this."
+        data-img-front="dresses/Off-Shoulder Floral Lace Flared Ball Gown with Sequins, Beading, Drawstring Back and Long Train/Front.jpeg"
+        data-img-back="dresses/Off-Shoulder Floral Lace Flared Ball Gown with Sequins, Beading, Drawstring Back and Long Train/Back.jpg">
+        <div class="dress-image-zone"><img src="dresses/Off-Shoulder Floral Lace Flared Ball Gown with Sequins, Beading, Drawstring Back and Long Train/Front.jpeg" class="dress-photo" alt="Princesse Royale" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Princesse Royale</h3><p class="dress-desc">Off-shoulder ball gown with sequins, beading and long train.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 30 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="Sleeveless Floral Lace Mermaid Gown with Corset and Drawstring Back" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="Sleeveless floral lace mermaid with corset and drawstring back."
+        data-editorial="The corset shapes you. The drawstring back holds you. The mermaid skirt follows you. And the floral lace covers everything in the most beautiful way imaginable. This is a gown with opinions — it knows what a wedding dress should do, and it does all of it without asking permission."
+        data-img-front="dresses/Sleeveless Floral Lace Mermaid Gown with Corset and Drawstring Back/Front.jpg"
+        data-img-back="dresses/Sleeveless Floral Lace Mermaid Gown with Corset and Drawstring Back/Back.jpeg">
+        <div class="dress-image-zone"><img src="dresses/Sleeveless Floral Lace Mermaid Gown with Corset and Drawstring Back/Front.jpg" class="dress-photo" alt="Sirène sans Manches" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Sirène sans Manches</h3><p class="dress-desc">Sleeveless floral lace mermaid with corset and drawstring back.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 31 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="Thick Strap Floral Lace Rhinestone High-Low Gown with Drawstring Back" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="Thick strap floral lace rhinestone high-low gown with drawstring back."
+        data-editorial="Thick straps are a statement of intention. They say: I am here, I am comfortable, I am going to dance. Rhinestones across floral lace that sparkles with every move, a high-low hem that keeps the evening light and the photos stunning. The drawstring back means this gown fits exactly as it should."
+        data-img-front="dresses/Thick Strap Floral Lace Rhinestone High-Low Gown with Drawstring Back/Front.jpg"
+        data-img-back="dresses/Thick Strap Floral Lace Rhinestone High-Low Gown with Drawstring Back/Back.jpeg">
+        <div class="dress-image-zone"><img src="dresses/Thick Strap Floral Lace Rhinestone High-Low Gown with Drawstring Back/Front.jpg" class="dress-photo" alt="Bretelles Larges" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Bretelles Larges</h3><p class="dress-desc">Thick strap rhinestone high-low — beautiful, comfortable, radiant.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 32 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="Short Floral Lace Gown with Sparkling Round Neckline and Zip Back" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="Short floral lace gown with sparkling round neckline and zip back."
+        data-editorial="For the bride who has never done anything the conventional way. Short, sparkling, covered in floral lace with a round neckline that frames the face perfectly and a zip back that takes ten seconds to do up. This gown is for the wedding that is entirely, unapologetically yours."
+        data-img-front="dresses/Short Floral Lace Gown with Sparkling Round Neckline and Zip Back/Front.jpg"
+        data-img-back="dresses/Short Floral Lace Gown with Sparkling Round Neckline and Zip Back/Back.jpg">
+        <div class="dress-image-zone"><img src="dresses/Short Floral Lace Gown with Sparkling Round Neckline and Zip Back/Front.jpg" class="dress-photo" alt="Mini Chic" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Mini Chic</h3><p class="dress-desc">Short floral lace with sparkling neckline — unapologetically yours.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+      <!-- CARD 33 -->
+      <article class="dress-card has-photo reveal" data-tilt data-tilt-max="6" data-tilt-glare="true" data-tilt-max-glare="0.12" data-modal="true"
+        data-name="Short White Satin Drop Sleeve Gown with Floral Lace Waist and Drawstring Back" data-price="Contact Us" data-size="UK 10 · US 8 · EU 38"
+        data-desc="Short white satin drop sleeve gown with floral lace waist and drawstring back."
+        data-editorial="Satin, short, with drop sleeves and a floral lace waist that marks the transition between the two fabrics like a ribbon tied on a gift. The drawstring back ensures the fit is perfect. This gown is an act of joy — chosen by the bride who knows that elegance and delight are not opposites."
+        data-img-front="dresses/Short White Satin Drop Sleeve Gown with Floral Lace Waist and Drawstring Back/Front.jpg"
+        data-img-back="dresses/Short White Satin Drop Sleeve Gown with Floral Lace Waist and Drawstring Back/Back.jpeg">
+        <div class="dress-image-zone"><img src="dresses/Short White Satin Drop Sleeve Gown with Floral Lace Waist and Drawstring Back/Front.jpg" class="dress-photo" alt="Courte Élégance" /><div class="dress-overlay"><span class="dress-overlay-text">View Gown →</span></div></div>
+        <div class="dress-info"><h3 class="dress-name">Courte Élégance</h3><p class="dress-desc">Short satin drop sleeve with floral lace waist.</p><div class="dress-meta"><span class="dress-price">Contact Us</span><span class="dress-size">UK 10</span></div></div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- =============================================
+       GOWN DETAIL MODAL
+  ============================================= -->
+  <div id="gown-modal" role="dialog" aria-modal="true" aria-labelledby="modal-gown-name" aria-hidden="true">
+    <div class="modal-backdrop" id="modal-backdrop"></div>
+    <div class="modal-panel">
+
+      <button class="modal-close" id="modal-close" aria-label="Close gown detail">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.2">
+          <line x1="1" y1="1" x2="17" y2="17"/><line x1="17" y1="1" x2="1" y2="17"/>
+        </svg>
+      </button>
+
+      <!-- Image slider -->
+      <div class="modal-slider">
+        <button class="slider-arrow slider-prev" id="slider-prev" aria-label="Previous image">
+          <svg width="10" height="18" viewBox="0 0 10 18" fill="none" stroke="currentColor" stroke-width="1.5">
+            <polyline points="9,1 1,9 9,17"/>
+          </svg>
+        </button>
+
+        <div class="slider-track" id="slider-track">
+          <div class="slider-slide active" id="slide-front">
+            <img id="modal-img-front" src="" alt="Front view" class="modal-dress-img" />
+            <span class="slide-label">Front</span>
+          </div>
+          <div class="slider-slide" id="slide-back">
+            <img id="modal-img-back" src="" alt="Back view" class="modal-dress-img" />
+            <span class="slide-label">Back</span>
+          </div>
+        </div>
+
+        <button class="slider-arrow slider-next" id="slider-next" aria-label="Next image">
+          <svg width="10" height="18" viewBox="0 0 10 18" fill="none" stroke="currentColor" stroke-width="1.5">
+            <polyline points="1,1 9,9 1,17"/>
+          </svg>
+        </button>
+
+        <!-- Slide dots -->
+        <div class="slider-dots">
+          <button class="slider-dot active" data-slide="0" aria-label="Front view"></button>
+          <button class="slider-dot" data-slide="1" aria-label="Back view"></button>
+        </div>
+      </div>
+
+      <!-- Gown details -->
+      <div class="modal-details">
+        <p class="section-eyebrow" id="modal-eyebrow">The Collection</p>
+        <h2 class="modal-gown-name" id="modal-gown-name"></h2>
+
+        <div class="modal-meta-row">
+          <span class="modal-price" id="modal-price"></span>
+          <span class="modal-size-badge" id="modal-size"></span>
+        </div>
+
+        <p class="modal-desc" id="modal-desc"></p>
+
+        <div class="modal-divider"></div>
+
+        <p class="modal-editorial-label">Editorial</p>
+        <p class="modal-editorial" id="modal-editorial"></p>
+
+        <a href="#book" class="btn-outline modal-book-btn" id="modal-book-btn">
+          Book a Fitting
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =============================================
+       ATELIER
+  ============================================= -->
+  <section id="atelier" aria-labelledby="atelier-heading">
+
+    <div class="atelier-header">
+      <p class="section-eyebrow reveal">The French Kiss Experience</p>
+      <h2 class="section-headline reveal" id="atelier-heading">
+        "From first glance to forever"
+      </h2>
+    </div>
+
+    <div class="atelier-hero-img reveal">
+      <img src="image-2.jpeg" alt="Lace detail at French Kiss Bridal" />
+    </div>
+
+    <div class="atelier-steps" id="atelier-steps">
+      <!-- Animated gold connector line -->
+      <div class="atelier-connector" id="atelier-line"></div>
+
+      <!-- Step I -->
+      <div class="step-card reveal">
+        <div class="step-numeral">I</div>
+        <p class="step-name">Discovery</p>
+        <p class="step-desc">
+          We begin with a private consultation over champagne — no rush,
+          no pressure. Just you, your vision, and our undivided attention.
+        </p>
+      </div>
+
+      <!-- Step II -->
+      <div class="step-card reveal">
+        <div class="step-numeral">II</div>
+        <p class="step-name">Design</p>
+        <p class="step-desc">
+          Our ateliers sketch bespoke concepts tailored to your silhouette,
+          refining every line until the gown on paper feels like it already
+          belongs to you.
+        </p>
+      </div>
+
+      <!-- Step III -->
+      <div class="step-card reveal">
+        <div class="step-numeral">III</div>
+        <p class="step-name">Fitting</p>
+        <p class="step-desc">
+          Three unhurried fittings in our salon — each one drawing the gown
+          closer to your body, your day, and the version of yourself
+          you've always imagined.
+        </p>
+      </div>
+
+      <!-- Step IV -->
+      <div class="step-card reveal">
+        <div class="step-numeral">IV</div>
+        <p class="step-name">Forever</p>
+        <p class="step-desc">
+          Your gown arrives wrapped in ivory tissue, hand-pressed and
+          ready. We stay close on your wedding day — and long after the
+          last dance.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =============================================
+       TESTIMONIALS
+  ============================================= -->
+  <section id="testimonials" aria-labelledby="testimonials-heading">
+    <div class="testimonials-inner">
+
+      <span class="quote-mark" aria-hidden="true">"</span>
+
+      <h2 class="sr-only" id="testimonials-heading">Bride Stories</h2>
+
+      <!-- Slide 1 -->
+      <div class="testimonial-slide active" role="group" aria-label="Testimonial 1 of 4">
+        <p class="testimonial-text">
+          I walked into French Kiss Bridal not knowing what I wanted.
+          I walked out having found the one — and every doubt dissolved.
+          The experience was unlike anything I expected.
+        </p>
+        <p class="testimonial-bride">— Camille L. · 2023</p>
+      </div>
+
+      <!-- Slide 2 -->
+      <div class="testimonial-slide" role="group" aria-label="Testimonial 2 of 4">
+        <p class="testimonial-text">
+          The Côte d'Azur gown moved with me on the dancefloor like
+          a second skin. Three months later, I still close my eyes and
+          feel the silk. This boutique is a sanctuary.
+        </p>
+        <p class="testimonial-bride">— Sofia R. · 2024</p>
+      </div>
+
+      <!-- Slide 3 -->
+      <div class="testimonial-slide" role="group" aria-label="Testimonial 3 of 4">
+        <p class="testimonial-text">
+          I cried twice during my fitting —
+          once when I saw myself in the mirror, once when I realised
+          I had to take it off. There are no words, truly.
+        </p>
+        <p class="testimonial-bride">— Élise M. · 2024</p>
+      </div>
+
+      <!-- Slide 4 -->
+      <div class="testimonial-slide" role="group" aria-label="Testimonial 4 of 4">
+        <p class="testimonial-text">
+          L'Éternité is exactly that — eternal. My grandmother
+          took one look at the gown and said it was the most beautiful
+          thing she had ever seen outside of a museum. So did my husband.
+        </p>
+        <p class="testimonial-bride">— Margot D., Nice · 2025</p>
+      </div>
+
+      <!-- Dot navigation -->
+      <div class="testimonial-dots" role="tablist" aria-label="Testimonial navigation">
+        <button class="t-dot active" role="tab" aria-selected="true"  aria-label="Testimonial 1" data-index="0"></button>
+        <button class="t-dot"        role="tab" aria-selected="false" aria-label="Testimonial 2" data-index="1"></button>
+        <button class="t-dot"        role="tab" aria-selected="false" aria-label="Testimonial 3" data-index="2"></button>
+        <button class="t-dot"        role="tab" aria-selected="false" aria-label="Testimonial 4" data-index="3"></button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =============================================
+       BOOK AN APPOINTMENT
+  ============================================= -->
+  <section id="book" aria-labelledby="book-heading">
+    <div class="book-inner">
+
+      <div class="book-left reveal">
+        <p class="section-eyebrow">Private Appointments</p>
+        <h2 class="book-headline" id="book-heading">
+          "Begin your<br>love story"
+        </h2>
+        <p class="book-body">
+          Every great gown begins with a single conversation.
+          Reserve your private appointment and let us guide you
+          through the most beautiful decision of your wedding day.
+        </p>
+        <p class="book-body" style="margin-top: var(--sp-2);">
+          Appointments are available Tuesday through Saturday,
+          by arrangement only. We welcome brides, mothers,
+          and the people who love them most.
+        </p>
+      </div>
+
+      <div class="book-right reveal">
+        <iframe
+          src="https://docs.google.com/forms/d/e/1FAIpQLSfSvSFLVA1KBkS8nDGnXAZvjIGZkl0K9P5tOVHuhKrX-YcL2g/viewform?embedded=true"
+          class="book-gform"
+          frameborder="0"
+          marginheight="0"
+          marginwidth="0"
+          title="Book a Private Fitting"
+          loading="lazy"
+        >Loading…</iframe>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =============================================
+       FOOTER
+  ============================================= -->
+  <footer role="contentinfo">
+    <p class="footer-monogram">FK</p>
+    <p class="footer-tagline">Where every love story finds its gown</p>
+    <ul class="footer-links">
+      <li><a href="#maison">About Us</a></li>
+      <li><a href="#collections">Collections</a></li>
+      <li><a href="#atelier">Our Process</a></li>
+      <li><a href="#testimonials">Stories</a></li>
+      <li><a href="#book">Book</a></li>
+    </ul>
+    <p class="footer-copy">© 2025 French Kiss Bridal · Luxury Bridal Wear</p>
+  </footer>
+
+  <!-- Screen-reader only utility -->
+  <style>.sr-only { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0; }</style>
+
+  <!-- =============================================
+       JAVASCRIPT
+  ============================================= -->
+  <script>
+  // Wait for GSAP to be available
+  window.addEventListener('load', () => {
+
+    // ── Guard: if GSAP didn't load (network issue), abort gracefully ──
+    if (typeof gsap === 'undefined') return;
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    // ────────────────────────────────────────────
+    // CUSTOM CURSOR
+    // ────────────────────────────────────────────
+    const ring = document.getElementById('cursor-ring');
+    const dot  = document.getElementById('cursor-dot');
+    const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    let ringX = mouse.x, ringY = mouse.y;
+
+    document.addEventListener('mousemove', e => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+      gsap.set(dot, { x: mouse.x, y: mouse.y });
+    });
+
+    // Ring follows with smooth lag
+    gsap.ticker.add(() => {
+      ringX += (mouse.x - ringX) * 0.14;
+      ringY += (mouse.y - ringY) * 0.14;
+      gsap.set(ring, { x: ringX, y: ringY });
+    });
+
+    // Expand on hover
+    const hoverTargets = document.querySelectorAll('a, button, .dress-card, .t-dot');
+    hoverTargets.forEach(el => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+    });
+
+    // ────────────────────────────────────────────
+    // INTRO ANIMATION
+    // ────────────────────────────────────────────
+    const intro = document.getElementById('intro');
+
+    const introTl = gsap.timeline();
+    introTl
+      .from('#intro-monogram', { opacity: 0, scale: 0.9, duration: 0.6, ease: 'power2.out' })
+      .to('#intro-monogram',   { opacity: 0, scale: 1.05, duration: 0.5, ease: 'power2.in' }, '+=0.7')
+      .to(intro, { opacity: 0, duration: 0.4, ease: 'power2.out',
+          onComplete: () => { intro.style.display = 'none'; }
+        })
+      .add(() => animateHero(), '-=0.1');
+
+    // ────────────────────────────────────────────
+    // HERO TEXT — CHARACTER-BY-CHARACTER STAGGER
+    // ────────────────────────────────────────────
+    function splitToChars(el, text) {
+      el.innerHTML = '';
+      [...text].forEach(ch => {
+        const span = document.createElement('span');
+        span.className = 'hero-char';
+        span.textContent = ch === ' ' ? ' ' : ch;
+        span.setAttribute('aria-hidden', 'true');
+        el.appendChild(span);
+      });
+      el.setAttribute('aria-label', text);
+    }
+
+    splitToChars(document.getElementById('hero-french-kiss'), 'FRENCH KISS');
+    splitToChars(document.getElementById('hero-bridal'), 'BRIDAL');
+    // Set initial states
+    gsap.set('#hero-eyebrow',  { opacity: 0, y: 12 });
+    gsap.set('#hero-tagline',  { opacity: 0, y: 16 });
+    gsap.set('#hero-script',   { opacity: 0, y: 16 });
+    gsap.set('#hero-cta',      { opacity: 0, y: 16 });
+    gsap.set('.hero-stats',    { opacity: 0, x: 24 });
+
+    function animateHero() {
+      const heroTl = gsap.timeline();
+      heroTl
+        .to('#hero-eyebrow', { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' })
+        .to('#hero-french-kiss .hero-char', {
+          opacity: 1, y: 0, duration: 0.7,
+          stagger: 0.025, ease: 'power3.out'
+        }, '-=0.1')
+        .to('#hero-bridal .hero-char', {
+          opacity: 1, y: 0, duration: 0.7,
+          stagger: 0.03, ease: 'power3.out'
+        }, '-=0.55')
+        .to('#hero-tagline', { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, '-=0.3')
+        .to('#hero-script',  { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, '-=0.35')
+        .to('#hero-cta',     { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, '-=0.35')
+        .to('.hero-stats',   { opacity: 1, x: 0,  duration: 0.7, ease: 'power2.out' }, '-=0.5')
+        .to('#scroll-hint',  { opacity: 1, duration: 0.5 }, '-=0.2');
+    }
+
+    // ────────────────────────────────────────────
+    // NAVIGATION — SLIDE DOWN AFTER 60px
+    // ────────────────────────────────────────────
+    const nav = document.getElementById('nav');
+    ScrollTrigger.create({
+      start: 60,
+      onEnter:      () => nav.classList.add('visible'),
+      onLeaveBack:  () => nav.classList.remove('visible'),
+    });
+
+    // ────────────────────────────────────────────
+    // SCROLL REVEAL — all .reveal elements
+    // ────────────────────────────────────────────
+    gsap.utils.toArray('.reveal').forEach((el, i) => {
+      gsap.to(el, {
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 88%',
+          toggleActions: 'play none none none',
+        },
+        opacity: 1,
+        y: 0,
+        duration: 0.75,
+        delay: (i % 4) * 0.08,
+        ease: 'power3.out',
+      });
+    });
+
+    // ────────────────────────────────────────────
+    // ATELIER CONNECTOR LINE
+    // ────────────────────────────────────────────
+    ScrollTrigger.create({
+      trigger: '#atelier-steps',
+      start: 'top 70%',
+      onEnter: () => {
+        gsap.to('#atelier-line', {
+          width: '75%',
+          duration: 1.2,
+          ease: 'power2.inOut',
+        });
+      },
+    });
+
+    // ────────────────────────────────────────────
+    // VANILLA TILT — dress cards
+    // ────────────────────────────────────────────
+    if (typeof VanillaTilt !== 'undefined') {
+      VanillaTilt.init(document.querySelectorAll('.dress-card'), {
+        max: 6,
+        speed: 600,
+        glare: true,
+        'max-glare': 0.15,
+        perspective: 900,
+      });
+    }
+
+    // ────────────────────────────────────────────
+    // DRESS CARDS — populate overlay labels from data attributes
+    // ────────────────────────────────────────────
+    document.querySelectorAll('.dress-card[data-modal]').forEach(card => {
+      const overlay = card.querySelector('.dress-overlay');
+      if (!overlay) return;
+      overlay.innerHTML = `
+        <span class="dress-overlay-name">${card.dataset.name}</span>
+        <span class="dress-overlay-desc">${card.dataset.desc}</span>
+        <span class="dress-overlay-cta">View Gown →</span>
+      `;
+    });
+
+    // ────────────────────────────────────────────
+    // TESTIMONIALS — auto-rotate every 5s
+    // ────────────────────────────────────────────
+    const slides = document.querySelectorAll('.testimonial-slide');
+    const dots   = document.querySelectorAll('.t-dot');
+    let current  = 0;
+    let timer;
+
+    function goToSlide(index) {
+      slides[current].classList.remove('active');
+      dots[current].classList.remove('active');
+      dots[current].setAttribute('aria-selected', 'false');
+      current = index;
+      slides[current].classList.add('active');
+      dots[current].classList.add('active');
+      dots[current].setAttribute('aria-selected', 'true');
+    }
+
+    function nextSlide() {
+      goToSlide((current + 1) % slides.length);
+    }
+
+    function startTimer() {
+      timer = setInterval(nextSlide, 5000);
+    }
+
+    startTimer();
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+        clearInterval(timer);
+        goToSlide(i);
+        startTimer();
+      });
+    });
+
+
+    // ────────────────────────────────────────────
+    // MOBILE MENU
+    // ────────────────────────────────────────────
+    document.getElementById('hamburger').addEventListener('click', () => {
+      const menu = document.getElementById('mobile-menu');
+      const isOpen = menu.classList.contains('open');
+      if (isOpen) {
+        closeMobileMenu();
+      } else {
+        menu.style.display = 'flex';
+        requestAnimationFrame(() => menu.classList.add('open'));
+      }
+    });
+
+    // ────────────────────────────────────────────
+    // GOWN DETAIL MODAL
+    // ────────────────────────────────────────────
+    const modal       = document.getElementById('gown-modal');
+    const modalClose  = document.getElementById('modal-close');
+    const modalBack   = document.getElementById('modal-backdrop');
+    const sliderPrev  = document.getElementById('slider-prev');
+    const sliderNext  = document.getElementById('slider-next');
+    const slideFront  = document.getElementById('slide-front');
+    const slideBack   = document.getElementById('slide-back');
+    const sliderDots  = document.querySelectorAll('.slider-dot');
+    let currentSlide  = 0;
+
+    function setSlide(index) {
+      currentSlide = index;
+      slideFront.classList.toggle('active', index === 0);
+      slideBack.classList.toggle('active',  index === 1);
+      // reposition absolute slide back behind active
+      if (index === 0) {
+        slideBack.style.position = 'absolute';
+        slideFront.style.position = 'relative';
+      } else {
+        slideFront.style.position = 'absolute';
+        slideBack.style.position  = 'relative';
+      }
+      sliderDots.forEach((d, i) => d.classList.toggle('active', i === index));
+    }
+
+    sliderPrev.addEventListener('click', () => setSlide(currentSlide === 0 ? 1 : 0));
+    sliderNext.addEventListener('click', () => setSlide(currentSlide === 0 ? 1 : 0));
+    sliderDots.forEach(dot => {
+      dot.addEventListener('click', () => setSlide(Number(dot.dataset.slide)));
+    });
+
+    function openModal(card) {
+      document.getElementById('modal-gown-name').textContent = card.dataset.name;
+      document.getElementById('modal-price').textContent     = card.dataset.price;
+      document.getElementById('modal-size').textContent      = card.dataset.size;
+      document.getElementById('modal-desc').textContent      = card.dataset.desc;
+      document.getElementById('modal-editorial').textContent = card.dataset.editorial;
+      document.getElementById('modal-img-front').src         = card.dataset.imgFront;
+      document.getElementById('modal-img-back').src          = card.dataset.imgBack;
+      setSlide(0);
+      modal.setAttribute('aria-hidden', 'false');
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll('.dress-card[data-modal]').forEach(card => {
+      card.addEventListener('click', () => openModal(card));
+      // also add pointer cursor feel
+      card.style.cursor = 'none';
+    });
+
+    modalClose.addEventListener('click', closeModal);
+    modalBack.addEventListener('click',  closeModal);
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeModal();
+      if (modal.classList.contains('open')) {
+        if (e.key === 'ArrowLeft')  setSlide(0);
+        if (e.key === 'ArrowRight') setSlide(1);
+      }
+    });
+
+    // Make modal book btn close modal and scroll to book
+    document.getElementById('modal-book-btn').addEventListener('click', () => {
+      closeModal();
+    });
+
+    // Add modal hover targets to cursor expansion
+    [modalClose, sliderPrev, sliderNext, ...sliderDots].forEach(el => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+    });
+
+  }); // end window load
+
+  function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    menu.classList.remove('open');
+    setTimeout(() => { menu.style.display = 'none'; }, 400);
+  }
+
+  // ── Date input floating label fix ──
+  // (date inputs don't fire placeholder-shown reliably)
+  document.addEventListener('DOMContentLoaded', () => {
+    const dateInput = document.getElementById('date');
+    const dateLabel = document.getElementById('date-label');
+    if (dateInput && dateLabel) {
+      dateInput.addEventListener('change', () => {
+        if (dateInput.value) {
+          dateLabel.style.top = '-4px';
+          dateLabel.style.fontSize = '0.6rem';
+          dateLabel.style.color = 'var(--color-gold)';
+          dateLabel.style.letterSpacing = '0.15em';
+        }
+      });
+    }
+  });
+  </script>
+
+</body>
+</html>
